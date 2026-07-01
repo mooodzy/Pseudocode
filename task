@@ -1,3 +1,5 @@
+ask 278: Veterinary Clinic
+
 CLASS owner 
  	ATTRIBUTES
 	 	ownerID : Integer	
@@ -118,4 +120,86 @@ OBJECT exam1 to Examination(301, "Fever")
 OBJECT treatment1 to Treatment(401, "Antibiotics", 15.00) 
 OBJECT visit1 to Visit(501, pet1, exam1)	
  
-END PROGRAM	
+END PROGRAM
+
+
+
+
+
+Task 279: Movie Theater
+CLASS Film
+    ATTRIBUTES
+        filmID : Integer
+        title : String
+        genre : String
+        duration : Integer
+    CONSTRUCTOR Film(id, title, genre, duration)
+        filmID to id
+        SET this.title to title
+        SET this.genre to genre
+        SET this.duration to duration
+    END CONSTRUCTOR
+END CLASS
+
+CLASS Screen
+    ATTRIBUTES
+        screenID : Integer
+        screenName : String
+        capacity : Integer
+        seatingLayout : String
+    CONSTRUCTOR Screen(id, name, capacity, layout)
+        screenID to id
+        screenName to name
+        SET this.capacity to capacity
+        SET seatingLayout to layout
+    END CONSTRUCTOR
+END CLASS
+
+CLASS Showtime
+    ATTRIBUTES
+        showtimeID : Integer
+        startTime : DateTime
+        endTime : DateTime
+        film : Film
+        screen : Screen
+        tickets : List of Ticket
+    CONSTRUCTOR Showtime(id, start, end, film, screen)
+        showtimeID to id
+        startTime to start
+        endTime to end
+        SET this.film to film
+        SET this.screen to screen
+        tickets to Empty List
+    END CONSTRUCTOR
+    METHOD addTicket(ticket)
+        Add ticket TO tickets
+    END METHOD
+    METHOD getAvailableSeats()
+        RETURN screen.capacity - tickets.size
+    END METHOD
+END CLASS
+
+CLASS Ticket
+    ATTRIBUTES
+        ticketID : Integer
+        customerName : String
+        seatNumber : String
+        showtime : Showtime
+    CONSTRUCTOR Ticket(id, customer, seat, showtime)
+        ticketID  id
+        customerName to customer
+        seatNumber to seat
+        SET this.showtime ← showtime
+    END CONSTRUCTOR
+    METHOD reserveSeat()
+        Display "Seat Reserved"
+    END METHOD
+END CLASS
+
+OBJECT film1 to Film(101, "Avengers", "Action", 180)
+OBJECT screen1 to Screen(1, "Screen A", 100, "10 × 10")
+OBJECT showtime1 to Showtime(201, "28/06/2026 6:00 PM", "28/06/2026 9:00 PM", film1, screen1)
+OBJECT ticket1 toTicket(301, "Ahmed Ali", "A5", showtime1)
+
+END PROGRAM
+	
