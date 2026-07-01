@@ -320,6 +320,112 @@ END PROGRAM
 
 
 
+Scenario 4: Airline Flight
+ 
+CLASS Flight
+    ATTRIBUTES
+        flightID : Integer
+        flightNumber : String
+        departureCity : String
+        destinationCity : String
+        departureTime : Date
+        arrivalTime : Date
+        bookings : List of Booking
+
+    CONSTRUCTOR Flight(id, number, departure, destination, departTime, arriveTime)
+        flightID :id
+        flightNumber : number
+        departureCity : departure
+        destinationCity ← destination
+        departureTime : departTime
+        arrivalTime : arriveTime
+        bookings :Empty List
+    END CONSTRUCTOR
+
+    METHOD addBooking(booking)
+        Add booking TO bookings
+    END METHOD
+END CLASS
+
+
+CLASS Passenger
+    ATTRIBUTES
+        passengerID : Integer
+        name : String
+        age : Integer
+        passportNumber : String
+        phoneNumber : String
+
+    CONSTRUCTOR Passenger(id, name, age, passport, phone)
+        passengerID : id
+        this.name :name
+        this.age :age
+        passportNumber :passport
+        phoneNumber :phone
+    END CONSTRUCTOR
+
+    METHOD displayPassenger()
+        Display name, passportNumber
+    END METHOD
+END CLASS
+
+
+CLASS Booking
+    ATTRIBUTES
+        bookingID : Integer
+        bookingDate : Date
+        flight : Flight
+        passenger : Passenger
+        seat : Seat
+
+    CONSTRUCTOR Booking(id, date, flight, passenger, seat)
+        bookingID : id
+        bookingDate : date
+        this.flight : flight
+        this.passenger : passenger
+        this.seat : seat
+    END CONSTRUCTOR
+
+    METHOD confirmBooking()
+        Display "Booking Confirmed"
+    END METHOD
+END CLASS
+
+
+CLASS Seat
+    ATTRIBUTES
+        seatNumber : String
+        section : String
+        seatType : String
+        availability : Boolean
+
+    CONSTRUCTOR Seat(number, section, type, available)
+        seatNumber : number
+        this.section : section
+        seatType : type
+        availability ← available
+    END CONSTRUCTOR
+
+    METHOD reserveSeat()
+        availability :false
+    END METHOD
+END CLASS
+
+
+OBJECT flight1 to Flight(101, "WY203", "Muscat", "Dubai", "28/06/2026 10:00 AM", "28/06/2026 11:30 AM")
+
+OBJECT passenger1 to Passenger(501, "Ahmed Ali", 25, "OM1234567", "+96891234567")
+
+OBJECT seat1 to Seat("12A", "Economy", "Window", false)
+
+OBJECT booking1 to Booking(9001, "25/06/2026", flight1, passenger1, seat1)
+
+ 
+END PROGRAM
+
+
+
+
 
 
 
