@@ -83,4 +83,39 @@ CLASS Examination
 END CLASS
 	
 		
-		
+CLASS Treatment
+	 ATTRIBUTES 
+	    treatmentID : Integer
+            description : String 
+	    cost : Double 
+	 CONSTRUCTOR Treatment(id, desc, cost)
+	    treatmentID TO id 
+	    description TO desc
+	    SET this.cost TO cost
+	 END CONSTRUCTOR 
+END CLASS 
+
+CLASS Visit
+	 ATTRIBUTES 
+		visitID : Integer 
+		pet : Pet
+		examination : Examination 
+	CONSTRUCTOR Visit(id, pet, exam)
+		 visitID to id 
+		SET this.pet to pet examination to exam 
+	END CONSTRUCTOR  
+   
+ 	METHOD
+ 	   getVisitTotal() 
+	   RETURN Sum of treatment.cost 
+	END METHOD 
+END CLASS
+
+OBJECT owner1 to Owner(101, "Ali Ahmed", "91234567")
+OBJECT species1 to Species("Dog", "Regular vaccination")
+OBJECT pet1 to Pet(201, "Max", "15/05/2022", species1)
+OBJECT exam1 to Examination(301, "Fever")
+OBJECT treatment1 to Treatment(401, "Antibiotics", 15.00) 
+OBJECT visit1 to Visit(501, pet1, exam1)	
+ 
+END PROGRAM	
