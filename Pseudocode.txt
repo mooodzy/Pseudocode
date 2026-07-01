@@ -157,3 +157,98 @@ patient1.AssignRoom(room1)
 patient1.AddProcedure(procedure1)
 
 END PROGRAM
+
+
+2-   Scenario 2: Library
+
+CLASS Member
+    ATTRIBUTES
+        memberID : Integer
+        fullName : String
+        address : String
+        maxBooksAllowed : Integer
+        phoneNumber : String
+        borrowedLoans : List of Loan
+
+    CONSTRUCTOR Member(id, name, addr, maxBooks, phone)
+        memberID : id
+        fullName : name
+        address :addr
+        maxBooksAllowed : maxBooks
+        phoneNumber :phone
+        borrowedLoans :Empty List
+    END CONSTRUCTOR
+
+    METHOD borrowBook(loan)
+        Add loan TO borrowedLoans
+    END METHOD
+END CLASS
+
+
+CLASS Book
+    ATTRIBUTES
+        bookID : Integer
+        title : String
+        author : String
+        category : String
+        totalCopies : Integer
+        availableCopies : Integer
+
+    CONSTRUCTOR Book(id, title, author, category, total, available)
+        bookID : id
+        title : title
+        author :author
+        category : category
+        totalCopies : total
+        availableCopies : available
+    END CONSTRUCTOR
+
+    METHOD borrowCopy()
+        availableCopies to availableCopies - 1
+    END METHOD
+END CLASS
+
+
+CLASS Loan
+    ATTRIBUTES
+        loanID : Integer
+        loanDate : String
+        dueDate : String
+        member : Member
+        book : Book
+
+    CONSTRUCTOR Loan(id, loanDate, dueDate, member, book)
+        loanID :id
+        this.loanDate : loanDate
+        this.dueDate :dueDate
+        this.member : member
+        this.book : book
+    END CONSTRUCTOR
+
+    METHOD displayLoan()
+        Display loanID, member.fullName, book.title, dueDate
+    END METHOD
+END CLASS
+
+
+OBJECT member1 ← Member(1001, "Sara Ahmed", "Sohar, Oman", 3, "91234567")
+OBJECT book1 ← Book(501, "Introduction to Java", "James Gosling", "Programming", 5, 2)
+OBJECT loan1 ← Loan(9001, "01/06/2026", "15/06/2026", member1, book1)
+
+
+END PROGRAM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
