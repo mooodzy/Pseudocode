@@ -1,125 +1,172 @@
-ask 278: Veterinary Clinic
+task 278: Veterinary Clinic
 
-CLASS owner 
- 	ATTRIBUTES
-	 	ownerID : Integer	
-         	name : String
-         	phoneNumber : String
-         	pets : List of Pet
- 
-	CONSTRUCTOR Owner(id, name, phone)	
-	       ownerID :id
-	       SET this.name to name 
- 	       phoneNumber to phone 
- 	       pets to Empty List
- 
- 	END CONSTRUCTOR 
+BEGIN
 
-	METHOD
+CLASS Owner
+    ATTRIBUTES
+        ownerID : Integer
+        name : String
+        phoneNumber : String
+        pets : List of Pet
 
-	addPet(pet)
-	Add pet TO pets
+    CONSTRUCTOR Owner(id, name, phone)
+        SET ownerID TO id
+        SET this.name TO name
+        SET phoneNumber TO phone
+        SET pets TO Empty List
+    END CONSTRUCTOR
 
-	END METHOD
+    METHOD addPet(pet)
+        Add pet TO pets
+    END METHOD
 END CLASS
 
 
 CLASS Species
-	ATTRIBUTES
-	   speciesName : String
-	   careRequirements : String
+    ATTRIBUTES
+        speciesName : String
+        careRequirements : String
 
-	CONSTRUCTOR Species(name, care)
-	   speciesName to name 
-	   careRequirements to care
-
-	END CONSTRUCTOR
-
+    CONSTRUCTOR Species(name, care)
+        SET speciesName TO name
+        SET careRequirements TO care
+    END CONSTRUCTOR
 END CLASS
+
 
 CLASS Pet
- 	ATTRIBUTES
-	    petID : Integer
-	    name : String 
-	   dateOfBirth : Date 
-	   species : Species 
-	   medicalHistory : List of Examination
+    ATTRIBUTES
+        petID : Integer
+        name : String
+        dateOfBirth : Date
+        species : Species
+        medicalHistory : List of Examination
 
- 	CONSTRUCTOR Pet(id, name, dob, species) 
-	   SET petID to id this.name to name
-           dateOfBirth to dob this.species ← species
-	   medicalHistory to Empty List 
-	END CONSTRUCTOR
+    CONSTRUCTOR Pet(id, name, dob, species)
+        SET petID TO id
+        SET this.name TO name
+        SET dateOfBirth TO dob
+        SET this.species TO species
+        SET medicalHistory TO Empty List
+    END CONSTRUCTOR
 
- 	METHOD 
-	  getAge() 
-	  RETURN CurrentDate - dateOfBirth 
-	END METHOD 
+    METHOD getAge()
+        RETURN CurrentDate - dateOfBirth
+    END METHOD
 
-	METHOD addExamination(exam) 
-	   Add exam TO medicalHistory
-	END METHOD 
+    METHOD addExamination(exam)
+        Add exam TO medicalHistory
+    END METHOD
 END CLASS
+
 
 CLASS Examination
-	ATTRIBUTES
-		examID : Integer
-		diagnosis : String
-`		urgent : Boolean
- 		treatments : List of Treatment
-	CONSTRUCTOR Examination(id, diagnosis)
-	 	examID to id
- 		SET this.diagnosis to diagnosis
-		urgent to false
+    ATTRIBUTES
+        examID : Integer
+        diagnosis : String
+        vitalSigns : String
+        urgent : Boolean
+        treatments : List of Treatment
 
-	END CONSTRUCTOR
-	METHOD checkUrgency()
-	  IF vital signs are outside safe range THEN
-		urgent TO true
-	 END IF
+    CONSTRUCTOR Examination(id, diagnosis, vitalSigns)
+        SET examID TO id
+        SET this.diagnosis TO diagnosis
+        SET this.vitalSigns TO vitalSigns
+        SET urgent TO False
+        SET treatments TO Empty List
+    END CONSTRUCTOR
 
-	METHOD 
-	  addTreatment(treatment)
-	  Add treatment TO treatments 
-	END METHOD
+    METHOD checkUrgency()
+        IF vitalSigns are outside safe range THEN
+            SET urgent TO True
+        END IF
+    END METHOD
+
+    METHOD addTreatment(treatment)
+        Add treatment TO treatments
+    END METHOD
 END CLASS
-	
-		
+
+
 CLASS Treatment
-	 ATTRIBUTES 
-	    treatmentID : Integer
-            description : String 
-	    cost : Double 
-	 CONSTRUCTOR Treatment(id, desc, cost)
-	    treatmentID TO id 
-	    description TO desc
-	    SET this.cost TO cost
-	 END CONSTRUCTOR 
-END CLASS 
+    ATTRIBUTES
+        treatmentID : Integer
+        description : String
+        cost : Double
+
+    CONSTRUCTOR Treatment(id, desc, cost)
+        SET treatmentID TO id
+        SET description TO desc
+        SET this.cost TO cost
+    END CONSTRUCTOR
+END CLASS
+
 
 CLASS Visit
-	 ATTRIBUTES 
-		visitID : Integer 
-		pet : Pet
-		examination : Examination 
-	CONSTRUCTOR Visit(id, pet, exam)
-		 visitID to id 
-		SET this.pet to pet examination to exam 
-	END CONSTRUCTOR  
-   
- 	METHOD
- 	   getVisitTotal() 
-	   RETURN Sum of treatment.cost 
-	END METHOD 
+    ATTRIBUTES
+        visitID : Integer
+        owner : Owner
+        pet : Pet
+        examination : Examination
+
+    CONSTRUCTOR Visit(id, owner, pet, exam)
+        SET visitID TO id
+        SET this.owner TO owner
+        SET this.pet TO pet
+        SET examination TO exam
+    END CONSTRUCTOR
+
+    METHOD getVisitTotal()
+        RETURN Sum of treatment.cost
+    END METHOD
 END CLASS
 
-OBJECT owner1 to Owner(101, "Ali Ahmed", "91234567")
-OBJECT species1 to Species("Dog", "Regular vaccination")
-OBJECT pet1 to Pet(201, "Max", "15/05/2022", species1)
-OBJECT exam1 to Examination(301, "Fever")
-OBJECT treatment1 to Treatment(401, "Antibiotics", 15.00) 
-OBJECT visit1 to Visit(501, pet1, exam1)	
- 
+
+START
+BEGIN
+
+CREATE OBJECT owner1 OF Owner
+SET owner1.ownerID TO 101
+SET owner1.name TO "Ali Ahmed"
+SET owner1.phoneNumber TO "91234567"
+
+CREATE OBJECT species1 OF Species
+SET species1.speciesName TO "Dog"
+SET species1.careRequirements TO "Regular Vaccination"
+
+CREATE OBJECT pet1 OF Pet
+SET pet1.petID TO 201
+SET pet1.name TO "Max"
+SET pet1.dateOfBirth TO "15/05/2022"
+SET pet1.species TO species1
+
+owner1.addPet(pet1)
+
+CREATE OBJECT exam1 OF Examination
+SET exam1.examID TO 301
+SET exam1.diagnosis TO "Fever"
+SET exam1.vitalSigns TO "High Temperature"
+
+exam1.checkUrgency()
+
+CREATE OBJECT treatment1 OF Treatment
+SET treatment1.treatmentID TO 401
+SET treatment1.description TO "Antibiotics"
+SET treatment1.cost TO 15.00
+
+exam1.addTreatment(treatment1)
+
+CREATE OBJECT visit1 OF Visit
+SET visit1.visitID TO 501
+SET visit1.owner TO owner1
+SET visit1.pet TO pet1
+SET visit1.examination TO exam1
+
+DISPLAY pet1.getAge()
+DISPLAY visit1.getVisitTotal()
+
+END
+STOP
 END PROGRAM
 
 
@@ -196,10 +243,37 @@ CLASS Ticket
     END METHOD
 END CLASS
 
-OBJECT film1 to Film(101, "Avengers", "Action", 180)
-OBJECT screen1 to Screen(1, "Screen A", 100, "10 × 10")
-OBJECT showtime1 to Showtime(201, "28/06/2026 6:00 PM", "28/06/2026 9:00 PM", film1, screen1)
-OBJECT ticket1 toTicket(301, "Ahmed Ali", "A5", showtime1)
+START
+BEGIN
+
+CREATE OBJECT teacher1 OF Teacher
+SET teacher1.teacherID TO 101
+SET teacher1.teacherName TO "Ali Hassan"
+
+CREATE OBJECT subject1 OF Subject
+SET subject1.subjectName TO "Mathematics"
+SET subject1.syllabus TO "Algebra and Geometry"
+
+CREATE OBJECT class1 OF SchoolClass
+SET class1.classID TO 201
+SET class1.className TO "Grade 10A"
+SET class1.maxClassSize TO 30
+SET class1.schedule TO "Sunday 8:00 AM"
+
+CREATE OBJECT student1 OF Student
+SET student1.studentID TO 301
+SET student1.studentName TO "Ahmed Ali"
+SET student1.personalRecord TO "Excellent"
+
+class1.enrollStudent(student1)
+
+DISPLAY student1.calculateAverage()
+
+END
+STOP
 
 END PROGRAM
+
+
+
 	
