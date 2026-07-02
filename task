@@ -1166,3 +1166,170 @@ END
 STOP
 
 
+
+Task 285: Concert Ticketing 
+
+CLASS Artist
+    ATTRIBUTES
+        artistID : Integer
+        artistName : String
+
+    CONSTRUCTOR Artist(id, name)
+        SET artistID TO id
+        SET artistName TO name
+    END CONSTRUCTOR
+END CLASS
+
+
+CLASS Venue
+    ATTRIBUTES
+        venueID : Integer
+        venueName : String
+        seatingChart : List of String
+        bookedDates : List of String
+
+    CONSTRUCTOR Venue(id, name, seating)
+        SET venueID TO id
+        SET venueName TO name
+        SET seatingChart TO seating
+        SET bookedDates TO Empty List
+    END CONSTRUCTOR
+
+    METHOD isAvailable(date)
+        IF date IN bookedDates THEN
+            RETURN False
+        ELSE
+            RETURN True
+        END IF
+    END METHOD
+
+    METHOD bookDate(date)
+        Add date TO bookedDates
+    END METHOD
+END CLASS
+
+
+CLASS TicketTier
+    ATTRIBUTES
+        tierName : String
+        price : Double
+        totalSeats : Integer
+        soldSeats : Integer
+
+    CONSTRUCTOR TicketTier(name, price, seats)
+        SET tierName TO name
+        SET this.price TO price
+        SET totalSeats TO seats
+        SET soldSeats TO 0
+    END CONSTRUCTOR
+
+    METHOD getRemainingSeats()
+        RETURN totalSeats - soldSeats
+    END METHOD
+END CLASS
+
+
+CLASS Ticket
+    ATTRIBUTES
+        ticketID : Integer
+        seatNumber : String
+        price : Double
+        tier : TicketTier
+
+    CONSTRUCTOR Ticket(id, seat, tier)
+        SET ticketID TO id
+        SET seatNumber TO seat
+        SET this.tier TO tier
+        SET price TO tier.price
+
+        tier.soldSeats = tier.soldSeats + 1
+    END CONSTRUCTOR
+END CLASS
+
+
+CLASS Concert
+    ATTRIBUTES
+        concertID : Integer
+        concertDate : String
+        artist : Artist
+        venue : Venue
+        tiers : List of TicketTier
+        soldSeats : List of String
+
+    CONSTRUCTOR Concert(id, date, artist, venue)
+        SET concertID TO id
+        SET concertDate TO date
+        SET this.artist TO artist
+        SET this.venue TO venue
+        SET tiers TO Empty List
+        SET soldSeats TO Empty List
+
+        venue.bookDate(date)
+    END CONSTRUCTOR
+
+    METHOD addTier(tier)
+        Add tier TO tiers
+    END METHOD
+
+    METHOD sellTicket(seatNumber, tier)
+        IF seatNumber IN soldSeats THEN
+            DISPLAY "Seat already sold"
+        ELSE IF tier.getRemainingSeats() <= 0 THEN
+            DISPLAY "Tier full"
+        ELSE
+            Add seatNumber TO soldSeats
+            CREATE Ticket
+        END IF
+    END METHOD
+
+    METHOD getRemainingTickets()
+        total = 0
+
+        FOR EACH t IN tiers
+            total = total + t.getRemainingSeats()
+        END FOR
+
+        RETURN total
+    END METHOD
+END CLASS
+
+
+START
+BEGIN
+
+CREATE OBJECT artist1 OF Artist
+SET artist1.artistID TO 101
+SET artist1.artistName TO "Ed Sheeran"
+
+CREATE OBJECT venue1 OF Venue
+SET venue1.venueID TO 201
+SET venue1.venueName TO "Royal Arena"
+SET venue1.seatingChart TO ["A1","A2","A3","B1","B2"]
+
+CREATE OBJECT concert1 OF Concert
+SET concert1.concertID TO 301
+SET concert1.concertDate TO "10/08/2026"
+SET concert1.artist TO artist1
+SET concert1.venue TO venue1
+
+CREATE OBJECT tier1 OF TicketTier
+SET tier1.tierName TO "VIP"
+SET tier1.price TO 200
+SET tier1.totalSeats TO 2
+
+CREATE OBJECT tier2 OF TicketTier
+SET tier2.tierName TO "Regular"
+SET tier2.price TO 100
+SET tier2.totalSeats TO 3
+
+concert1.addTier(tier1)
+concert1.addTier(tier2)
+
+concert1.sellTicket("A1", tier1)
+concert1.sellTicket("A2", tier2)
+
+DISPLAY concert1.getRemainingTickets()
+
+END
+STOP
+
