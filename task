@@ -426,4 +426,181 @@ DISPLAY product1.getTotalStock()
 
 END
 STOP
+
+
+
+
+Task 281: School Classroom
+
+
+CLASS Teacher
+    ATTRIBUTES
+        teacherID : Integer
+        teacherName : String
+        subject : Subject
+
+    CONSTRUCTOR Teacher(id, name, subject)
+        SET teacherID TO id
+        SET teacherName TO name
+        SET this.subject TO subject
+    END CONSTRUCTOR
+END CLASS
+
+
+CLASS Subject
+    ATTRIBUTES
+        subjectID : Integer
+        subjectName : String
+        syllabus : String
+        schedule : String
+
+    CONSTRUCTOR Subject(id, name, syllabus, schedule)
+        SET subjectID TO id
+        SET subjectName TO name
+        SET this.syllabus TO syllabus
+        SET this.schedule TO schedule
+    END CONSTRUCTOR
+END CLASS
+
+
+CLASS Assessment
+    ATTRIBUTES
+        assessmentID : Integer
+        assessmentName : String
+        weight : Real
+
+    CONSTRUCTOR Assessment(id, name, weight)
+        SET assessmentID TO id
+        SET assessmentName TO name
+        SET this.weight TO weight
+    END CONSTRUCTOR
+END CLASS
+
+
+CLASS Grade
+    ATTRIBUTES
+        score : Real
+        assessment : Assessment
+
+    CONSTRUCTOR Grade(score, assessment)
+        SET this.score TO score
+        SET this.assessment TO assessment
+    END CONSTRUCTOR
+END CLASS
+
+
+CLASS Student
+    ATTRIBUTES
+        studentID : Integer
+        studentName : String
+        personalRecord : String
+        grades : List of Grade
+        classSchedule : String
+
+    CONSTRUCTOR Student(id, name, record)
+        SET studentID TO id
+        SET studentName TO name
+        SET personalRecord TO record
+        SET grades TO Empty List
+    END CONSTRUCTOR
+
+    METHOD addGrade(grade)
+        Add grade TO grades
+    END METHOD
+
+    METHOD calculateAverage()
+        totalWeighted = 0
+        totalWeight = 0
+
+        FOR EACH grade IN grades
+            totalWeighted = totalWeighted + (grade.score * grade.assessment.weight)
+            totalWeight = totalWeight + grade.assessment.weight
+        END FOR
+
+        IF totalWeight = 0 THEN
+            RETURN 0
+        END IF
+
+        RETURN totalWeighted / totalWeight
+    END METHOD
+END CLASS
+
+
+CLASS SchoolClass
+    ATTRIBUTES
+        classID : Integer
+        className : String
+        maxClassSize : Integer
+        schedule : String
+        teacher : Teacher
+        subject : Subject
+        students : List of Student
+
+    CONSTRUCTOR SchoolClass(id, name, maxSize, schedule, teacher, subject)
+        SET classID TO id
+        SET className TO name
+        SET this.maxClassSize TO maxSize
+        SET this.schedule TO schedule
+        SET this.teacher TO teacher
+        SET this.subject TO subject
+        SET students TO Empty List
+    END CONSTRUCTOR
+
+    METHOD enrollStudent(student)
+        IF students.size >= maxClassSize THEN
+            DISPLAY "Class Full"
+        ELSE IF student.classSchedule = schedule THEN
+            DISPLAY "Schedule Conflict"
+        ELSE
+            Add student TO students
+            SET student.classSchedule TO schedule
+        END IF
+    END METHOD
+END CLASS
+
+
+START
+BEGIN
+
+CREATE OBJECT subject1 OF Subject
+SET subject1.subjectID TO 101
+SET subject1.subjectName TO "Mathematics"
+SET subject1.syllabus TO "Algebra and Geometry"
+SET subject1.schedule TO "Sunday 8:00 AM"
+
+CREATE OBJECT teacher1 OF Teacher
+SET teacher1.teacherID TO 201
+SET teacher1.teacherName TO "Mr. Ahmed"
+SET teacher1.subject TO subject1
+
+CREATE OBJECT class1 OF SchoolClass
+SET class1.classID TO 301
+SET class1.className TO "Grade 10A"
+SET class1.maxClassSize TO 30
+SET class1.schedule TO "Sunday 8:00 AM"
+SET class1.teacher TO teacher1
+SET class1.subject TO subject1
+
+CREATE OBJECT student1 OF Student
+SET student1.studentID TO 401
+SET student1.studentName TO "Ali Hassan"
+SET student1.personalRecord TO "Good Student"
+
+CREATE OBJECT assessment1 OF Assessment
+SET assessment1.assessmentID TO 501
+SET assessment1.assessmentName TO "Quiz 1"
+SET assessment1.weight TO 0.3
+
+CREATE OBJECT grade1 OF Grade
+SET grade1.score TO 85
+SET grade1.assessment TO assessment1
+
+student1.addGrade(grade1)
+
+class1.enrollStudent(student1)
+
+DISPLAY student1.calculateAverage()
+
+END
+STOP
 	
