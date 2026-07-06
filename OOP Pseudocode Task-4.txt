@@ -432,3 +432,95 @@ END
 STOP
 
 END PROGRAM
+
+
+
+
+Task 289: Personal Trainer Bookings
+BEGIN
+
+CLASS Client
+    ATTRIBUTES
+        PRIVATE clientID : Integer
+        PRIVATE clientName : String
+        PRIVATE phone : String
+        PRIVATE email : String
+        PRIVATE sessions : List of Session
+
+    CONSTRUCTOR Client(id, name, phone, email)
+        SET clientID TO id
+        SET clientName TO name
+        SET this.phone TO phone
+        SET this.email TO email
+        SET sessions TO Empty List
+    END CONSTRUCTOR
+
+    METHOD addSession(session)
+        ADD session TO sessions
+    END METHOD
+END CLASS
+
+
+CLASS Session
+    ATTRIBUTES
+        PRIVATE sessionID : Integer
+        PRIVATE client : Client
+        PRIVATE sessionDate : String
+        PRIVATE duration : Integer
+        PRIVATE workoutType : String
+
+    CONSTRUCTOR Session(id, client, date, duration, workout)
+        SET sessionID TO id
+        SET this.client TO client
+        SET sessionDate TO date
+        SET this.duration TO duration
+        SET workoutType TO workout
+    END CONSTRUCTOR
+END CLASS
+
+
+CLASS Trainer
+    ATTRIBUTES
+        PRIVATE trainerID : Integer
+        PRIVATE trainerName : String
+        PRIVATE sessions : List of Session
+
+    CONSTRUCTOR Trainer(id, name)
+        SET trainerID TO id
+        SET trainerName TO name
+        SET sessions TO Empty List
+    END CONSTRUCTOR
+
+    METHOD addSession(session)
+        ADD session TO sessions
+    END METHOD
+
+    METHOD displaySessions()
+        REPEAT FROM i = 0 TO sessions.size - 1
+            DISPLAY sessions[i]
+        END REPEAT
+    END METHOD
+END CLASS
+
+
+START PROGRAM
+BEGIN
+
+    CREATE OBJECT client1 OF Client(101, "Ali", "98765432", "ali@email.com")
+
+    CREATE OBJECT trainer1 OF Trainer(201, "Ahmed")
+
+    CREATE OBJECT session1 OF Session(301, client1, "10-Jul-2026", 2, "Cardio")
+
+    client1.addSession(session1)
+
+    trainer1.addSession(session1)
+
+    DISPLAY "Session Booked Successfully"
+
+    trainer1.displaySessions()
+
+END
+STOP
+
+END PROGRAM
