@@ -1,4 +1,4 @@
-TASK 288 :
+Task 288: Bookshop:
 
 
 CLASS Genre
@@ -89,6 +89,7 @@ END PROGRAM
 
 
 Task 289: Online Exam Platform 
+
 CLASS Student
     ATTRIBUTES
         PRIVATE studentID : Integer
