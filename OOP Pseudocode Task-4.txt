@@ -88,7 +88,118 @@ STOP
 END PROGRAM
 
 
+Task 289: Online Exam Platform 
+CLASS Student
+    ATTRIBUTES
+        PRIVATE studentID : Integer
+        PRIVATE studentName : String
+        PRIVATE attempts : List of Attempt
+
+    CONSTRUCTOR Student(id, name)
+        SET studentID TO id
+        SET studentName TO name
+        SET attempts TO Empty List
+    END CONSTRUCTOR
+
+    METHOD startExam(exam)
+        CREATE attempt1 OF Attempt(exam, this)
+        ADD attempt1 TO attempts
+        RETURN attempt1
+    END METHOD
+END CLASS
 
 
+CLASS Question
+    ATTRIBUTES
+        PRIVATE questionText : String
+        PRIVATE correctAnswer : String
+        PRIVATE marks : Integer
+
+    CONSTRUCTOR Question(text, answer, marks)
+        SET questionText TO text
+        SET correctAnswer TO answer
+        SET this.marks TO marks
+    END CONSTRUCTOR
+END CLASS
 
 
+CLASS Exam
+    ATTRIBUTES
+        PRIVATE examID : Integer
+        PRIVATE questions : List of Question
+        PRIVATE timeLimit : Integer   // in minutes
+
+    CONSTRUCTOR Exam(id, timeLimit)
+        SET examID TO id
+        SET this.timeLimit TO timeLimit
+        SET questions TO Empty List
+    END CONSTRUCTOR
+
+    METHOD addQuestion(q)
+        ADD q TO questions
+    END METHOD
+END CLASS
+
+
+CLASS Attempt
+    ATTRIBUTES
+        PRIVATE exam : Exam
+        PRIVATE student : Student
+        PRIVATE answers : List of String
+        PRIVATE score : Integer
+        PRIVATE startTime : Integer
+
+    CONSTRUCTOR Attempt(exam, student)
+        SET this.exam TO exam
+        SET this.student TO student
+        SET answers TO Empty List
+        SET score TO 0
+        SET startTime TO CurrentTime
+    END CONSTRUCTOR
+
+    METHOD addAnswer(answer)
+        IF CurrentTime - startTime > exam.timeLimit THEN
+            DISPLAY "Time is over - no more answers allowed"
+        ELSE
+            ADD answer TO answers
+        END IF
+    END METHOD
+
+    METHOD calculateScore()
+        SET score TO 0
+
+        REPEAT FROM i = 0 TO exam.questions.size - 1
+            IF answers[i] = exam.questions[i].correctAnswer THEN
+                SET score TO score + exam.questions[i].marks
+            END IF
+        END REPEAT
+
+        RETURN score
+    END METHOD
+END CLASS
+
+
+START
+BEGIN
+
+    CREATE OBJECT student1 OF Student(101, "Ali")
+
+    CREATE OBJECT exam1 OF Exam(201, 60)
+
+    CREATE OBJECT q1 OF Question("2 + 2 = ?", "4", 5)
+    CREATE OBJECT q2 OF Question("5 + 3 = ?", "8", 5)
+
+    exam1.addQuestion(q1)
+    exam1.addQuestion(q2)
+
+    attempt1 = student1.startExam(exam1)
+
+    attempt1.addAnswer("4")
+    attempt1.addAnswer("8")
+
+    DISPLAY attempt1.calculateScore()
+
+END
+STOP
+END PROGRAM
+ 
