@@ -1,0 +1,88 @@
+TASK 288 :
+
+
+CLASS Genre
+    ATTRIBUTES
+        PRIVATE genreName : String
+
+    CONSTRUCTOR Genre(name)
+        SET genreName TO name
+    END CONSTRUCTOR
+END CLASS
+
+CLASS Book
+    ATTRIBUTES
+        PRIVATE title : String
+        PRIVATE author : String
+        PRIVATE price : Double
+        PRIVATE genre : Genre
+
+    CONSTRUCTOR Book(title, author, price, genre)
+        SET this.title TO title
+        SET this.author TO author
+        SET this.price TO price
+        SET this.genre TO genre
+    END CONSTRUCTOR
+END CLASS
+
+
+CLASS Sale
+    ATTRIBUTES
+        PRIVATE book : Book
+        PRIVATE soldPrice : Double
+
+    CONSTRUCTOR Sale(book, price)
+        SET this.book TO book
+        SET this.soldPrice TO price
+    END CONSTRUCTOR
+END CLASS
+
+
+
+CLASS Customer
+    ATTRIBUTES
+        PRIVATE customerID : Integer
+        PRIVATE customerName : String
+        PRIVATE purchaseHistory : List of Sale
+
+    CONSTRUCTOR Customer(id, name)
+        SET customerID TO id
+        SET customerName TO name
+        SET purchaseHistory TO Empty List
+    END CONSTRUCTOR
+
+    METHOD buyBook(book)
+        CREATE sale1 OF Sale(book, book.price)
+        ADD sale1 TO purchaseHistory
+    END METHOD
+
+    METHOD getTotalPurchases()
+        SET total TO 0
+
+        REPEAT FROM i = 0 TO purchaseHistory.size - 1
+            SET total TO total + purchaseHistory[i].soldPrice
+        END REPEAT
+
+        RETURN total
+    END METHOD
+END CLASS
+
+
+
+START
+BEGIN
+
+    CREATE OBJECT genre1 OF Genre("Fiction")
+
+    CREATE OBJECT book1 OF Book("Harry Potter", "J.K. Rowling", 50, genre1)
+
+    CREATE OBJECT customer1 OF Customer(101, "Ali")
+
+    customer1.buyBook(book1)
+
+    DISPLAY customer1.getTotalPurchases()
+
+END
+STOP
+
+END PROGRAM
