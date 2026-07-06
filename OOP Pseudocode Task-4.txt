@@ -308,6 +308,127 @@ STOP
 
 END PROGRAM	
 
+Task 291: Co-working Space 
+
+BEGIN
+
+CLASS MembershipPlan
+    ATTRIBUTES
+        PRIVATE planName : String
+        PRIVATE monthlyQuota : Integer
+
+    CONSTRUCTOR MembershipPlan(name, quota)
+        SET planName TO name
+        SET monthlyQuota TO quota
+    END CONSTRUCTOR
+END CLASS
 
 
+CLASS Member
+    ATTRIBUTES
+        PRIVATE memberID : Integer
+        PRIVATE memberName : String
+        PRIVATE plan : MembershipPlan
+        PRIVATE bookings : List of Booking
 
+    CONSTRUCTOR Member(id, name, plan)
+        SET memberID TO id
+        SET memberName TO name
+        SET this.plan TO plan
+        SET bookings TO Empty List
+    END CONSTRUCTOR
+
+    METHOD addBooking(booking)
+        ADD booking TO bookings
+    END METHOD
+
+    METHOD getRemainingHours()
+        SET usedHours TO 0
+
+        REPEAT FROM i = 0 TO bookings.size - 1
+            SET usedHours TO usedHours + bookings[i].duration
+        END REPEAT
+
+        RETURN plan.monthlyQuota - usedHours
+    END METHOD
+END CLASS
+
+
+CLASS Room
+    ATTRIBUTES
+        PRIVATE roomID : Integer
+        PRIVATE roomName : String
+        PRIVATE bookings : List of Booking
+
+    CONSTRUCTOR Room(id, name)
+        SET roomID TO id
+        SET roomName TO name
+        SET bookings TO Empty List
+    END CONSTRUCTOR
+
+    METHOD isAvailable(startTime, endTime)
+        REPEAT FROM i = 0 TO bookings.size - 1
+            IF startTime < bookings[i].endTime AND endTime > bookings[i].startTime THEN
+                RETURN False
+            END IF
+        END REPEAT
+
+        RETURN True
+    END METHOD
+
+    METHOD addBooking(booking)
+        ADD booking TO bookings
+    END METHOD
+END CLASS
+
+
+CLASS Booking
+    ATTRIBUTES
+        PRIVATE bookingID : Integer
+        PRIVATE member : Member
+        PRIVATE room : Room
+        PRIVATE startTime : Integer
+        PRIVATE endTime : Integer
+        PRIVATE duration : Integer
+
+    CONSTRUCTOR Booking(id, member, room, startTime, endTime)
+        SET bookingID TO id
+        SET this.member TO member
+        SET this.room TO room
+        SET this.startTime TO startTime
+        SET this.endTime TO endTime
+        SET duration TO endTime - startTime
+    END CONSTRUCTOR
+END CLASS
+
+
+START
+BEGIN
+
+    CREATE OBJECT plan1 OF MembershipPlan( "Standard", 20)
+
+    CREATE OBJECT member1 OF Member(101, "Ali", plan1)
+
+    CREATE OBJECT room1 OF Room(201, "Meeting Room A")
+
+    IF member1.getRemainingHours() >= 2 AND room1.isAvailable(9, 11) THEN
+
+        CREATE OBJECT booking1 OF Booking(301, member1, room1, 9, 11)
+
+        member1.addBooking(booking1)
+        room1.addBooking(booking1)
+
+        DISPLAY "Booking Successful"
+
+    ELSE
+
+        DISPLAY "Booking Rejected"
+
+    END IF
+
+    DISPLAY member1.getRemainingHours()
+
+END
+STOP
+
+END PROGRAM
