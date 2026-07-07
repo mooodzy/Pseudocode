@@ -29,7 +29,6 @@ CLASS Book
         PRIVATE price : Double
         PRIVATE genre : Genre
 
-
     CONSTRUCTOR Book(title : String, author : String, price : Double, genre : Genre)
 
         SET this.title TO title
@@ -621,21 +620,11 @@ START PROGRAM
     )
 
 
-    CREATE trip1 OF Trip(
-        401,
-        "Muscat Mall",
-        "Sultan Qaboos University",
-        7.500,
-        driver1,
-        passenger1
-    )
+    CREATE trip1 OF Trip( 401,"Muscat Mall", "Sultan Qaboos University",7.500, driver1,passenger1)
 
 
     CALL driver1.addTrip(trip1)
-
     CALL passenger1.addTrip(trip1)
-
-
     CALL trip1.displayTripDetails()
 
 
@@ -764,7 +753,6 @@ CLASS Booking
 
 
     CONSTRUCTOR Booking(id, member, room, startTime, endTime)
-
         IF startTime >= endTime THEN
             DISPLAY "Invalid time slot"
             RETURN
@@ -779,9 +767,8 @@ CLASS Booking
 
     END CONSTRUCTOR
 
-
     METHOD getDuration()
-        RETURN duration
+        display duration
     END METHOD
 
 END CLASS
@@ -791,18 +778,13 @@ END CLASS
 START
 
 BEGIN
-
     CREATE OBJECT plan1 OF MembershipPlan("Standard", 20)
-
     CREATE OBJECT member1 OF Member(101, "Ali", plan1)
-
     CREATE OBJECT room1 OF Room(201, "Meeting Room A")
-
 
     IF member1.getRemainingHours() >= 2 AND room1.isAvailable(9,11) THEN
 
         CREATE OBJECT booking1 OF Booking(301, member1, room1, 9, 11)
-
         member1.addBooking(booking1)
         room1.addBooking(booking1)
 
@@ -813,7 +795,6 @@ BEGIN
         DISPLAY "Booking Rejected"
 
     END IF
-
 
     DISPLAY "Remaining Hours: "
     DISPLAY member1.getRemainingHours()
@@ -888,9 +869,7 @@ CLASS Session
 
     METHOD toString()
 
-        RETURN "Date: " + sessionDate +
-               ", Duration: " + duration +
-               " hours, Workout: " + workoutType
+        display "Date: " + sessionDate +", Duration: " + duration + " hours, Workout: " + workoutType
 
     END METHOD
 
@@ -950,21 +929,11 @@ BEGIN
 
     CREATE OBJECT client1 OF Client(101, "Ali", "98765432", "ali@email.com")
 
-
-    CREATE OBJECT session1 OF Session(
-        301,
-        client1,
-        trainer1,
-        "10-Jul-2026",
-        2,
-        "Cardio"
-    )
-
+    CREATE OBJECT session1 OF Session(301, client1,trainer1,"10-Jul-2026",2,"Cardio")
 
     client1.addSession(session1)
 
     trainer1.addSession(session1)
-
 
     DISPLAY "Session Booked Successfully"
 
