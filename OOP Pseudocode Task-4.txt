@@ -159,18 +159,10 @@ START PROGRAM
     CREATE genre1 OF Genre("Fiction")
 
 
-    CREATE book1 OF Book(
-        "Harry Potter",
-        "J.K. Rowling",
-        50.0,
-        genre1
-    )
+    CREATE book1 OF Book("Harry Potter", "J.K. Rowling",50.0, genre1 )
 
 
-    CREATE customer1 OF Customer(
-        101,
-        "Ali"
-    )
+    CREATE customer1 OF Customer(101,"Ali")
 
 
     CALL customer1.buyBook(book1)
@@ -181,122 +173,251 @@ START PROGRAM
 
 END PROGRAM
 
-Task 289: Online Exam Platform 
+
+Task 289: Online Exam Platform pseudocode
+
 
 CLASS Student
+
     ATTRIBUTES
         PRIVATE studentID : Integer
         PRIVATE studentName : String
-        PRIVATE attempts : List of Attempt
+        PRIVATE attempts : List<Attempt>
 
-    CONSTRUCTOR Student(id, name)
-        SET studentID TO id
-        SET studentName TO name
+
+    CONSTRUCTOR Student(id : Integer, name : String)
+
+        SET this.studentID TO id
+        SET this.studentName TO name
         SET attempts TO Empty List
+
     END CONSTRUCTOR
 
-    METHOD startExam(exam)
+
+
+    METHOD startExam(exam : Exam) : Attempt
+
         CREATE attempt1 OF Attempt(exam, this)
+
         ADD attempt1 TO attempts
+
         RETURN attempt1
+
     END METHOD
+
+
+
+    METHOD getStudentName() : String
+        RETURN studentName
+    END METHOD
+
+
+
+    METHOD getStudentID() : Integer
+        RETURN studentID
+    END METHOD
+
 END CLASS
 
 
+
+
 CLASS Question
+
     ATTRIBUTES
         PRIVATE questionText : String
         PRIVATE correctAnswer : String
         PRIVATE marks : Integer
 
-    CONSTRUCTOR Question(text, answer, marks)
+
+    CONSTRUCTOR Question(text : String, answer : String, marks : Integer)
+
         SET questionText TO text
         SET correctAnswer TO answer
         SET this.marks TO marks
+
     END CONSTRUCTOR
+
+
+
+    METHOD getCorrectAnswer() : String
+        RETURN correctAnswer
+    END METHOD
+
+
+
+    METHOD getMarks() : Integer
+        RETURN marks
+    END METHOD
+
+
+
+    METHOD getQuestionText() : String
+        RETURN questionText
+    END METHOD
+
 END CLASS
+
+
 
 
 CLASS Exam
+
     ATTRIBUTES
         PRIVATE examID : Integer
-        PRIVATE questions : List of Question
-        PRIVATE timeLimit : Integer   // in minutes
+        PRIVATE questions : List<Question>
+        PRIVATE timeLimit : Integer
 
-    CONSTRUCTOR Exam(id, timeLimit)
+
+    CONSTRUCTOR Exam(id : Integer, limit : Integer)
+
         SET examID TO id
-        SET this.timeLimit TO timeLimit
+        SET timeLimit TO limit
         SET questions TO Empty List
+
     END CONSTRUCTOR
 
-    METHOD addQuestion(q)
+
+
+    METHOD addQuestion(q : Question)
+
         ADD q TO questions
+
     END METHOD
+
+
+
+    METHOD getQuestions() : List<Question>
+
+        RETURN questions
+
+    END METHOD
+
+
+
+    METHOD getTimeLimit() : Integer
+
+        RETURN timeLimit
+
+    END METHOD
+
 END CLASS
 
 
+
+
 CLASS Attempt
+
     ATTRIBUTES
         PRIVATE exam : Exam
         PRIVATE student : Student
-        PRIVATE answers : List of String
+        PRIVATE answers : List<String>
         PRIVATE score : Integer
         PRIVATE startTime : Integer
 
-    CONSTRUCTOR Attempt(exam, student)
+
+    CONSTRUCTOR Attempt(exam : Exam, student : Student)
+
         SET this.exam TO exam
         SET this.student TO student
         SET answers TO Empty List
         SET score TO 0
-        SET startTime TO CurrentTime
+        SET startTime TO SYSTEM.CURRENT_TIME()
+
     END CONSTRUCTOR
 
-    METHOD addAnswer(answer)
-        IF CurrentTime - startTime > exam.timeLimit THEN
+
+
+    METHOD addAnswer(answer : String)
+
+        IF SYSTEM.CURRENT_TIME() - startTime > exam.getTimeLimit() THEN
+
             DISPLAY "Time is over - no more answers allowed"
+
+        ELSE IF answers.size >= exam.getQuestions().size THEN
+
+            DISPLAY "All questions are already answered"
+
         ELSE
+
             ADD answer TO answers
+
         END IF
+
     END METHOD
 
-    METHOD calculateScore()
+
+
+    METHOD calculateScore() : Integer
+
         SET score TO 0
 
-        REPEAT FROM i = 0 TO exam.questions.size - 1
-            IF answers[i] = exam.questions[i].correctAnswer THEN
-                SET score TO score + exam.questions[i].marks
+        FOR i FROM 0 TO answers.size - 1
+
+            IF answers[i] = exam.getQuestions()[i].getCorrectAnswer() THEN
+
+                SET score TO score + exam.getQuestions()[i].getMarks()
+
             END IF
-        END REPEAT
+
+        END FOR
+
 
         RETURN score
+
     END METHOD
+
+
+
+    METHOD getScore() : Integer
+
+        RETURN score
+
+    END METHOD
+
 END CLASS
 
 
-START
-BEGIN
 
-    CREATE OBJECT student1 OF Student(101, "Ali")
 
-    CREATE OBJECT exam1 OF Exam(201, 60)
+START PROGRAM
 
-    CREATE OBJECT q1 OF Question("2 + 2 = ?", "4", 5)
-    CREATE OBJECT q2 OF Question("5 + 3 = ?", "8", 5)
 
-    exam1.addQuestion(q1)
-    exam1.addQuestion(q2)
+    CREATE student1 OF Student(101, "Ali")
 
-    attempt1 = student1.startExam(exam1)
 
-    attempt1.addAnswer("4")
-    attempt1.addAnswer("8")
+    CREATE exam1 OF Exam(201, 60)
+
+
+
+    CREATE q1 OF Question("2 + 2 = ?", "4", 5)
+
+    CREATE q2 OF Question("5 + 3 = ?", "8", 5)
+
+
+
+    CALL exam1.addQuestion(q1)
+
+    CALL exam1.addQuestion(q2)
+
+
+
+    CREATE attempt1
+
+    SET attempt1 TO student1.startExam(exam1)
+
+
+
+    CALL attempt1.addAnswer("4")
+
+    CALL attempt1.addAnswer("8")
+
+
 
     DISPLAY attempt1.calculateScore()
 
-END
-STOP
-END PROGRAM
- 
+
+END PROGRAM 
 
 
 Task 290: Taxi Company
