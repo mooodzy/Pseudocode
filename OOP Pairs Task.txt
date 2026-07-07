@@ -425,6 +425,157 @@ END PROGRAM
 
 
 
+Scenario 5: Online Shop
+Class Shopper
+    Attributes
+        shopperID : Integer
+        name : String
+        email : String
+
+    Constructor(shopperID : Integer, name : String, email : String)
+        this.shopperID = shopperID
+        this.name = name
+        this.email = email
+
+    Methods
+        createPurchase()
+        viewPurchaseHistory()
+End Class
+
+
+Class Purchase
+    Attributes
+        purchaseID : Integer
+        purchaseDate : Date
+        totalAmount : Double
+        shopper : Shopper
+        delivery : Delivery
+        lineItems : List<LineItem>
+
+    Constructor(purchaseID : Integer, purchaseDate : Date)
+        this.purchaseID = purchaseID
+        this.purchaseDate = purchaseDate
+        totalAmount = 0
+
+    Methods
+        addLineItem(item : LineItem)
+        removeLineItem(item : LineItem)
+        calculateTotal() : Double
+        checkout()
+End Class
+
+
+Class LineItem
+    Attributes
+        product : Product
+        quantity : Integer
+        subtotal : Double
+
+    Constructor(product : Product, quantity : Integer)
+        this.product = product
+        this.quantity = quantity
+        subtotal = product.getPrice() * quantity
+
+    Methods
+        calculateSubtotal() : Double
+End Class
+
+
+Class Product
+    Attributes
+        productID : Integer
+        productName : String
+        price : Double
+        stockQuantity : Integer
+
+    Constructor(productID : Integer, productName : String,
+                price : Double, stockQuantity : Integer)
+        this.productID = productID
+        this.productName = productName
+        this.price = price
+        this.stockQuantity = stockQuantity
+
+    Methods
+        updateStock(quantity : Integer)
+        getPrice() : Double
+End Class
+
+
+Class Delivery
+    Attributes
+        deliveryID : Integer
+        deliveryStatus : String
+        deliveryDate : Date
+        address : Address
+
+    Constructor(deliveryID : Integer, deliveryStatus : String,
+                deliveryDate : Date, address : Address)
+        this.deliveryID = deliveryID
+        this.deliveryStatus = deliveryStatus
+        this.deliveryDate = deliveryDate
+        this.address = address
+
+    Methods
+        updateStatus(status : String)
+        scheduleDelivery(date : Date)
+End Class
+
+
+Class Address
+    Attributes
+        street : String
+        city : String
+        state : String
+        postalCode : String
+        country : String
+
+    Constructor(street : String, city : String,
+                state : String, postalCode : String,
+                country : String)
+        this.street = street
+        this.city = city
+        this.state = state
+        this.postalCode = postalCode
+        this.country = country
+
+    Methods
+        displayAddress()
+End Class
+
+
+Start Program
+
+    Create shopper1 as Shopper(101, "Ali Ahmed", "ali@email.com")
+
+    Create product1 as Product(201, "Laptop", 450.00, 10)
+    Create product2 as Product(202, "Mouse", 15.00, 50)
+
+    Create item1 as LineItem(product1, 1)
+    Create item2 as LineItem(product2, 2)
+
+    Create address1 as Address(
+        "12 Sultan Street",
+        "Muscat",
+        "Muscat",
+        "112",
+        "Oman"
+    )
+
+    Create delivery1 as Delivery(
+        301,
+        "Pending",
+        "10/07/2026",
+        address1
+    )
+
+    Create purchase1 as Purchase(401, "07/07/2026")
+
+    purchase1.addLineItem(item1)
+    purchase1.addLineItem(item2)
+    purchase1.calculateTotal()
+    purchase1.checkout()
+
+End Program
 
 
 
