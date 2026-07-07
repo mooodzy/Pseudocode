@@ -1,0 +1,123 @@
+Task 293: Shape Drawing App :
+
+
+
+CLASS Shape
+    ATTRIBUTES
+        color : String
+        x : Integer
+        y : Integer
+
+    CONSTRUCTOR Shape(color : String, x : Integer, y : Integer)
+        SET color = color
+        SET x = x
+        SET y = y
+
+    METHODS
+        calculateArea() : Double
+        calculatePerimeter() : Double
+END CLASS
+
+
+CLASS Circle INHERITS Shape
+    ATTRIBUTES
+        radius : Double
+
+    CONSTRUCTOR Circle(color : String, x : Integer, y : Integer, radius : Double)
+        CALL Shape(color, x, y)
+        SET radius = radius
+
+    METHODS
+        calculateArea() : Double
+            RETURN 3.14 * radius * radius
+
+        calculatePerimeter() : Double
+            RETURN 2 * 3.14 * radius
+END CLASS
+
+
+CLASS Rectangle INHERITS Shape
+    ATTRIBUTES
+        width : Double
+        height : Double
+
+    CONSTRUCTOR Rectangle(color : String, x : Integer, y : Integer,
+                          width : Double, height : Double)
+        CALL Shape(color, x, y)
+        SET width = width
+        SET height = height
+
+    METHODS
+        calculateArea() : Double
+            RETURN width * height
+
+        calculatePerimeter() : Double
+            RETURN 2 * (width + height)
+END CLASS
+
+
+CLASS Triangle INHERITS Shape
+    ATTRIBUTES
+        side1 : Double
+        side2 : Double
+        side3 : Double
+
+    CONSTRUCTOR Triangle(color : String, x : Integer, y : Integer,
+                         side1 : Double, side2 : Double, side3 : Double)
+        CALL Shape(color, x, y)
+        SET side1 = side1
+        SET side2 = side2
+        SET side3 = side3
+
+    METHODS
+        calculateArea() : Double
+            RETURN "Use Heron's Formula"
+
+        calculatePerimeter() : Double
+            RETURN side1 + side2 + side3
+END CLASS
+
+
+CLASS Canvas
+    ATTRIBUTES
+        shapes : List<Shape>
+
+    CONSTRUCTOR Canvas()
+        CREATE empty shapes list
+
+    METHODS
+        addShape(shape : Shape)
+            ADD shape TO shapes
+
+        displayShapes()
+            FOR EACH shape IN shapes
+                PRINT shape
+            END FOR
+END CLASS
+
+
+START PROGRAM
+
+DECLARE canvas : Canvas
+SET canvas = NEW Canvas()
+
+DECLARE circle : Circle
+SET circle = NEW Circle("Red", 10, 20, 5)
+
+DECLARE rectangle : Rectangle
+SET rectangle = NEW Rectangle("Blue", 30, 40, 8, 4)
+
+DECLARE triangle : Triangle
+SET triangle = NEW Triangle("Green", 50, 60, 3, 4, 5)
+
+CALL canvas.addShape(circle)
+CALL canvas.addShape(rectangle)
+CALL canvas.addShape(triangle)
+
+PRINT "Circle Area = " + circle.calculateArea()
+PRINT "Rectangle Area = " + rectangle.calculateArea()
+PRINT "Triangle Perimeter = " + triangle.calculatePerimeter()
+
+CALL canvas.displayShapes()
+
+END PROGRAM
