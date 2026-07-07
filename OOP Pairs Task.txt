@@ -996,3 +996,119 @@ End Program
 
 
 
+
+Scenario 10: Car Rental
+Class Customer
+    Attributes
+        customerID : Integer
+        name : String
+        phone : String
+        email : String
+
+    Constructor(customerID : Integer,
+                name : String,
+                phone : String,
+                email : String)
+
+    Methods
+        createRental()
+        viewRentalHistory()
+End Class
+
+
+Class Rental
+    Attributes
+        rentalID : Integer
+        startDate : Date
+        endDate : Date
+        totalCost : Double
+        customer : Customer
+        vehicle : Vehicle
+
+    Constructor(rentalID : Integer,
+                startDate : Date,
+                endDate : Date,
+                customer : Customer,
+                vehicle : Vehicle)
+
+    Methods
+        calculateCost() : Double
+        completeRental()
+End Class
+
+
+Class Vehicle
+    Attributes
+        vehicleID : Integer
+        make : String
+        model : String
+        year : Integer
+        registrationNumber : String
+        maintenanceRecords : List<MaintenanceRecord>
+
+    Constructor(vehicleID : Integer,
+                make : String,
+                model : String,
+                year : Integer,
+                registrationNumber : String)
+
+    Methods
+        addMaintenanceRecord(record : MaintenanceRecord)
+        displayVehicleDetails()
+End Class
+
+
+Class MaintenanceRecord
+    Attributes
+        recordID : Integer
+        serviceDate : Date
+        description : String
+        cost : Double
+
+    Constructor(recordID : Integer,
+                serviceDate : Date,
+                description : String,
+                cost : Double)
+
+    Methods
+        updateRecord()
+        displayMaintenanceDetails()
+End Class
+
+
+Start Program
+
+    Create customer1 as Customer(101,
+        "Ali Ahmed",
+        "98765432",
+        "ali@email.com")
+
+    Create vehicle1 as Vehicle(201,
+        "Toyota",
+        "Camry",
+        2025,
+        "ABC123")
+
+    Create record1 as MaintenanceRecord(301,
+        "01/07/2026",
+        "Oil Change",
+        50.00)
+
+    vehicle1.addMaintenanceRecord(record1)
+
+    Create rental1 as Rental(401,
+        "05/07/2026",
+        "10/07/2026",
+        customer1,
+        vehicle1)
+
+    rental1.calculateCost()
+
+    rental1.completeRental()
+
+End Program
+
+
+
+
+
