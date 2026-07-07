@@ -158,18 +158,13 @@ START PROGRAM
 
     CREATE genre1 OF Genre("Fiction")
 
-
     CREATE book1 OF Book("Harry Potter", "J.K. Rowling",50.0, genre1 )
-
 
     CREATE customer1 OF Customer(101,"Ali")
 
-
     CALL customer1.buyBook(book1)
 
-
     DISPLAY customer1.getTotalPurchases()
-
 
 END PROGRAM
 
@@ -198,10 +193,8 @@ CLASS Student
     METHOD startExam(exam : Exam) : Attempt
 
         CREATE attempt1 OF Attempt(exam, this)
-
         ADD attempt1 TO attempts
-
-        RETURN attempt1
+        diplay attempt1
 
     END METHOD
 
@@ -282,7 +275,6 @@ CLASS Exam
     METHOD addQuestion(q : Question)
 
         ADD q TO questions
-
     END METHOD
 
 
@@ -423,60 +415,138 @@ END PROGRAM
 Task 290: Taxi Company
 
 
-
-BEGIN
-
 CLASS Vehicle
+
     ATTRIBUTES
         PRIVATE vehicleID : Integer
         PRIVATE model : String
         PRIVATE plateNumber : String
 
-    CONSTRUCTOR Vehicle(id, model, plate)
-        SET vehicleID TO id
+
+    CONSTRUCTOR Vehicle(id : Integer, model : String, plate : String)
+
+        SET this.vehicleID TO id
         SET this.model TO model
-        SET plateNumber TO plate
+        SET this.plateNumber TO plate
+
     END CONSTRUCTOR
+
+
+
+    METHOD getModel() : String
+        RETURN model
+    END METHOD
+
+
+
+    METHOD getPlateNumber() : String
+        RETURN plateNumber
+    END METHOD
+
 END CLASS
 
 
+
+
 CLASS Driver
+
     ATTRIBUTES
         PRIVATE driverID : Integer
         PRIVATE driverName : String
         PRIVATE phoneNumber : String
         PRIVATE vehicle : Vehicle
-        PRIVATE trips : List of Trip
+        PRIVATE trips : List<Trip>
 
-    CONSTRUCTOR Driver(id, name, phone, vehicle)
-        SET driverID TO id
-        SET driverName TO name
-        SET phoneNumber TO phone
+
+    CONSTRUCTOR Driver(id : Integer, name : String,
+                       phone : String, vehicle : Vehicle)
+
+        SET this.driverID TO id
+        SET this.driverName TO name
+        SET this.phoneNumber TO phone
         SET this.vehicle TO vehicle
         SET trips TO Empty List
+
     END CONSTRUCTOR
 
-    METHOD addTrip(trip)
+
+
+    METHOD addTrip(trip : Trip)
+
         ADD trip TO trips
+
     END METHOD
+
+
+
+    METHOD getDriverName() : String
+
+        RETURN driverName
+
+    END METHOD
+
+
+
+    METHOD getTrips() : List<Trip>
+
+        RETURN trips
+
+    END METHOD
+
 END CLASS
 
 
+
+
 CLASS Passenger
+
     ATTRIBUTES
         PRIVATE passengerID : Integer
         PRIVATE passengerName : String
         PRIVATE phoneNumber : String
+        PRIVATE trips : List<Trip>
 
-    CONSTRUCTOR Passenger(id, name, phone)
-        SET passengerID TO id
-        SET passengerName TO name
-        SET phoneNumber TO phone
+
+    CONSTRUCTOR Passenger(id : Integer, name : String, phone : String)
+
+        SET this.passengerID TO id
+        SET this.passengerName TO name
+        SET this.phoneNumber TO phone
+        SET trips TO Empty List
+
     END CONSTRUCTOR
+
+
+
+    METHOD addTrip(trip : Trip)
+
+        ADD trip TO trips
+
+    END METHOD
+
+
+
+    METHOD getPassengerName() : String
+
+        RETURN passengerName
+
+    END METHOD
+
+
+
+    METHOD getTrips() : List<Trip>
+
+        RETURN trips
+
+    END METHOD
+
 END CLASS
 
 
+
+
 CLASS Trip
+
     ATTRIBUTES
         PRIVATE tripID : Integer
         PRIVATE pickupLocation : String
@@ -485,27 +555,73 @@ CLASS Trip
         PRIVATE driver : Driver
         PRIVATE passenger : Passenger
 
-    CONSTRUCTOR Trip(id, pickup, dropoff, fare, driver, passenger)
-        SET tripID TO id
-        SET pickupLocation TO pickup
-        SET dropoffLocation TO dropoff
+
+    CONSTRUCTOR Trip(id : Integer,
+                     pickup : String,
+                     dropoff : String,
+                     fare : Double,
+                     driver : Driver,
+                     passenger : Passenger)
+
+        SET this.tripID TO id
+        SET this.pickupLocation TO pickup
+        SET this.dropoffLocation TO dropoff
         SET this.fare TO fare
         SET this.driver TO driver
         SET this.passenger TO passenger
+
     END CONSTRUCTOR
+
+
+
+    METHOD displayTripDetails()
+
+        DISPLAY "Trip ID: " + tripID
+        DISPLAY "Pickup: " + pickupLocation
+        DISPLAY "Dropoff: " + dropoffLocation
+        DISPLAY "Fare: " + fare
+
+    END METHOD
+
+
+
+    METHOD getFare() : Double
+
+        RETURN fare
+
+    END METHOD
+
 END CLASS
 
 
-START
-BEGIN
 
-    CREATE OBJECT vehicle1 OF Vehicle(101, "Toyota Corolla", "A12345")
 
-    CREATE OBJECT driver1 OF Driver(201, "Ahmed", "91234567", vehicle1)
+START PROGRAM
 
-    CREATE OBJECT passenger1 OF Passenger(301, "Ali", "99887766")
 
-    CREATE OBJECT trip1 OF Trip(
+    CREATE vehicle1 OF Vehicle(
+        101,
+        "Toyota Corolla",
+        "A12345"
+    )
+
+
+    CREATE driver1 OF Driver(
+        201,
+        "Ahmed",
+        "91234567",
+        vehicle1
+    )
+
+
+    CREATE passenger1 OF Passenger(
+        301,
+        "Ali",
+        "99887766"
+    )
+
+
+    CREATE trip1 OF Trip(
         401,
         "Muscat Mall",
         "Sultan Qaboos University",
@@ -514,14 +630,16 @@ BEGIN
         passenger1
     )
 
-    driver1.addTrip(trip1)
 
-    DISPLAY "Trip Created Successfully"
+    CALL driver1.addTrip(trip1)
 
-END
-STOP
+    CALL passenger1.addTrip(trip1)
 
-END PROGRAM	
+
+    CALL trip1.displayTripDetails()
+
+
+END PROGRAM
 
 Task 291: Co-working Space 
 
