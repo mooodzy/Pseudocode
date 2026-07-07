@@ -781,4 +781,96 @@ End Program
 
 
 
+Scenario 8: Construction Project
+
+Class Project
+    Attributes
+        projectID : Integer
+        projectName : String
+        location : String
+        phases : List<Phase>
+
+    Constructor(projectID : Integer, projectName : String,
+                location : String)
+
+    Methods
+        addPhase(phase : Phase)
+        displayProject()
+End Class
+
+
+Class Phase
+    Attributes
+        phaseID : Integer
+        phaseName : String
+        startDate : Date
+        endDate : Date
+        tasks : List<Task>
+
+    Constructor(phaseID : Integer, phaseName : String,
+                startDate : Date, endDate : Date)
+
+    Methods
+        addTask(task : Task)
+        completePhase()
+End Class
+
+
+Class Task
+    Attributes
+        taskID : Integer
+        taskName : String
+        status : String
+        worker : Worker
+
+    Constructor(taskID : Integer, taskName : String,
+                status : String, worker : Worker)
+
+    Methods
+        assignWorker(worker : Worker)
+        updateStatus(status : String)
+End Class
+
+
+Class Worker
+    Attributes
+        workerID : Integer
+        name : String
+        position : String
+        phone : String
+
+    Constructor(workerID : Integer, name : String,
+                position : String, phone : String)
+
+    Methods
+        performTask()
+        updateDetails()
+End Class
+
+
+Start Program
+
+    Create worker1 as Worker(101, "Ahmed Ali",
+        "Electrician", "98765432")
+
+    Create task1 as Task(201, "Install Wiring",
+        "Pending", worker1)
+
+    Create phase1 as Phase(301, "Electrical Work",
+        "01/08/2026", "15/08/2026")
+
+    phase1.addTask(task1)
+
+    Create project1 as Project(401,
+        "Office Building",
+        "Muscat")
+
+    project1.addPhase(phase1)
+
+    task1.updateStatus("Completed")
+
+    project1.displayProject()
+
+End Program
+
 
