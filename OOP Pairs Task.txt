@@ -874,3 +874,125 @@ Start Program
 End Program
 
 
+
+Scenario 9: University Department
+Class Department
+    Attributes
+        departmentID : Integer
+        departmentName : String
+        programmes : List<Programme>
+
+    Constructor(departmentID : Integer,
+                departmentName : String)
+
+    Methods
+        addProgramme(programme : Programme)
+        displayProgrammes()
+End Class
+
+
+Class Programme
+    Attributes
+        programmeID : Integer
+        programmeName : String
+        duration : Integer
+        semesters : List<Semester>
+
+    Constructor(programmeID : Integer,
+                programmeName : String,
+                duration : Integer)
+
+    Methods
+        addSemester(semester : Semester)
+        displayProgrammeDetails()
+End Class
+
+
+Class Semester
+    Attributes
+        semesterID : Integer
+        semesterNumber : Integer
+        academicYear : String
+        modules : List<Module>
+
+    Constructor(semesterID : Integer,
+                semesterNumber : Integer,
+                academicYear : String)
+
+    Methods
+        addModule(module : Module)
+        displayModules()
+End Class
+
+
+Class Module
+    Attributes
+        moduleID : Integer
+        moduleName : String
+        creditHours : Integer
+        assessments : List<Assessment>
+
+    Constructor(moduleID : Integer,
+                moduleName : String,
+                creditHours : Integer)
+
+    Methods
+        addAssessment(assessment : Assessment)
+        calculateTotalMarks() : Double
+End Class
+
+
+Class Assessment
+    Attributes
+        assessmentID : Integer
+        assessmentName : String
+        assessmentType : String
+        marks : Double
+
+    Constructor(assessmentID : Integer,
+                assessmentName : String,
+                assessmentType : String,
+                marks : Double)
+
+    Methods
+        updateMarks(newMarks : Double)
+        displayAssessment()
+End Class
+
+
+Start Program
+
+    Create department1 as Department(101, "Computer Science")
+
+    Create programme1 as Programme(201,
+        "Bachelor of Computer Science",
+        4)
+
+    Create semester1 as Semester(301,
+        1,
+        "2026")
+
+    Create module1 as Module(401,
+        "Object Oriented Programming",
+        3)
+
+    Create assessment1 as Assessment(501,
+        "Final Exam",
+        "Exam",
+        60.0)
+
+    module1.addAssessment(assessment1)
+
+    semester1.addModule(module1)
+
+    programme1.addSemester(semester1)
+
+    department1.addProgramme(programme1)
+
+    department1.displayProgrammes()
+
+End Program
+
+
+
+
