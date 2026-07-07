@@ -1,92 +1,185 @@
 Task 288: Bookshop:
 
+PROGRAM Bookshop
+
 
 CLASS Genre
+
     ATTRIBUTES
         PRIVATE genreName : String
 
-    CONSTRUCTOR Genre(name)
-        SET genreName TO name
+    CONSTRUCTOR Genre(name : String)
+        SET this.genreName TO name
     END CONSTRUCTOR
+
+
+    METHOD getGenreName() : String
+        RETURN genreName
+    END METHOD
+
 END CLASS
 
+
+
 CLASS Book
+
     ATTRIBUTES
         PRIVATE title : String
         PRIVATE author : String
         PRIVATE price : Double
         PRIVATE genre : Genre
 
-    CONSTRUCTOR Book(title, author, price, genre)
+
+    CONSTRUCTOR Book(title : String, author : String, price : Double, genre : Genre)
+
         SET this.title TO title
         SET this.author TO author
         SET this.price TO price
         SET this.genre TO genre
+
     END CONSTRUCTOR
+
+
+    METHOD getTitle() : String
+        RETURN title
+    END METHOD
+
+
+    METHOD getAuthor() : String
+        RETURN author
+    END METHOD
+
+
+    METHOD getPrice() : Double
+        RETURN price
+    END METHOD
+
+
+    METHOD getGenre() : Genre
+        RETURN genre
+    END METHOD
+
 END CLASS
 
 
+
+
 CLASS Sale
+
     ATTRIBUTES
         PRIVATE book : Book
         PRIVATE soldPrice : Double
 
-    CONSTRUCTOR Sale(book, price)
+
+    CONSTRUCTOR Sale(book : Book, price : Double)
+
         SET this.book TO book
         SET this.soldPrice TO price
+
     END CONSTRUCTOR
+
+
+    METHOD getSoldPrice() : Double
+        RETURN soldPrice
+    END METHOD
+
+
+    METHOD getBook() : Book
+        RETURN book
+    END METHOD
+
 END CLASS
+
 
 
 
 CLASS Customer
+
     ATTRIBUTES
         PRIVATE customerID : Integer
         PRIVATE customerName : String
-        PRIVATE purchaseHistory : List of Sale
+        PRIVATE purchaseHistory : List<Sale>
 
-    CONSTRUCTOR Customer(id, name)
-        SET customerID TO id
-        SET customerName TO name
+
+    CONSTRUCTOR Customer(id : Integer, name : String)
+
+        SET this.customerID TO id
+        SET this.customerName TO name
         SET purchaseHistory TO Empty List
+
     END CONSTRUCTOR
 
-    METHOD buyBook(book)
-        CREATE sale1 OF Sale(book, book.price)
+
+
+    METHOD buyBook(book : Book)
+
+        CREATE sale1 OF Sale(book, book.getPrice())
+
         ADD sale1 TO purchaseHistory
+
     END METHOD
 
-    METHOD getTotalPurchases()
-        SET total TO 0
 
-        REPEAT FROM i = 0 TO purchaseHistory.size - 1
-            SET total TO total + purchaseHistory[i].soldPrice
-        END REPEAT
+
+    METHOD getTotalPurchases() : Double
+
+        SET total : Double TO 0
+
+
+        FOR EACH sale IN purchaseHistory
+
+            SET total TO total + sale.getSoldPrice()
+
+        END FOR
+
 
         RETURN total
+
     END METHOD
+
+
+
+    METHOD getCustomerName() : String
+        RETURN customerName
+    END METHOD
+
+
+    METHOD getCustomerID() : Integer
+        RETURN customerID
+    END METHOD
+
 END CLASS
 
 
 
-START
-BEGIN
 
-    CREATE OBJECT genre1 OF Genre("Fiction")
+START PROGRAM
 
-    CREATE OBJECT book1 OF Book("Harry Potter", "J.K. Rowling", 50, genre1)
 
-    CREATE OBJECT customer1 OF Customer(101, "Ali")
+    CREATE genre1 OF Genre("Fiction")
 
-    customer1.buyBook(book1)
+
+    CREATE book1 OF Book(
+        "Harry Potter",
+        "J.K. Rowling",
+        50.0,
+        genre1
+    )
+
+
+    CREATE customer1 OF Customer(
+        101,
+        "Ali"
+    )
+
+
+    CALL customer1.buyBook(book1)
+
 
     DISPLAY customer1.getTotalPurchases()
 
-END
-STOP
 
 END PROGRAM
-
 
 Task 289: Online Exam Platform 
 
