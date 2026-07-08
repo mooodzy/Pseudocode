@@ -748,4 +748,182 @@ END PROGRAM
 
 
 
+Task 298: Delivery Vehicles Fleet
 
+
+CLASS Vehicle
+
+    ATTRIBUTES
+        licensePlate : String
+        fuelLevel : Double
+        engine : Engine
+
+    CONSTRUCTOR Vehicle(licensePlate : String,fuelLevel : Double,engine : Engine)
+
+        SET this.licensePlate = licensePlate
+        SET this.fuelLevel = fuelLevel
+        SET this.engine = engine
+
+
+    METHODS
+
+        calculateDeliveryTime(distance : Double) : Double
+
+            RETURN distance / 50
+
+
+END CLASS
+
+
+CLASS Van INHERITS Vehicle
+
+    ATTRIBUTES
+        cargoCapacity : Double
+
+
+    CONSTRUCTOR Van(licensePlate : String,fuelLevel : Double,engine : Engine, cargoCapacity : Double)
+
+        CALL SUPER(licensePlate, fuelLevel, engine)
+
+        SET this.cargoCapacity = cargoCapacity
+
+
+    OVERRIDE METHOD calculateDeliveryTime(distance : Double) : Double
+
+        RETURN distance / 50
+
+END CLASS
+
+
+
+CLASS Motorbike INHERITS Vehicle
+
+    ATTRIBUTES
+        packageLimit : Integer
+
+
+    CONSTRUCTOR Motorbike(licensePlate : String,fuelLevel : Double,engine : Engine,packageLimit : Integer)
+
+        CALL SUPER(licensePlate, fuelLevel, engine)
+
+        SET this.packageLimit = packageLimit
+
+
+    OVERRIDE METHOD calculateDeliveryTime(distance : Double) : Double
+
+        RETURN distance / 80
+
+END CLASS
+
+
+
+CLASS Truck INHERITS Vehicle
+
+
+    ATTRIBUTES
+        heavyLoadCapacity : Double
+
+
+    CONSTRUCTOR Truck(licensePlate : String,
+                      fuelLevel : Double,
+                      engine : Engine,
+                      heavyLoadCapacity : Double)
+
+        CALL SUPER(licensePlate, fuelLevel, engine)
+
+        SET this.heavyLoadCapacity = heavyLoadCapacity
+
+
+    OVERRIDE METHOD calculateDeliveryTime(distance : Double) : Double
+
+        RETURN distance / 40
+
+END CLASS
+
+
+
+CLASS Engine
+
+    ATTRIBUTES
+        horsepower : Integer
+        fuelEfficiency : Double
+
+
+    CONSTRUCTOR Engine(horsepower : Integer,
+                       fuelEfficiency : Double)
+
+        SET this.horsepower = horsepower
+        SET this.fuelEfficiency = fuelEfficiency
+
+END CLASS
+
+
+
+CLASS Stop
+
+    ATTRIBUTES
+        address : String
+        package : String
+
+
+    CONSTRUCTOR Stop(address : String, package : String)
+        SET this.address = address
+        SET this.package = package
+
+END CLASS
+
+
+
+CLASS Route
+
+    ATTRIBUTES
+        stops : List<Stop>
+
+
+    CONSTRUCTOR Route()
+
+        CREATE empty stops list
+
+
+    METHODS
+
+        addStop(stop : Stop)
+
+            ADD stop TO stops
+
+END CLASS
+
+
+
+START PROGRAM
+
+
+DECLARE engine1 : Engine
+
+SET engine1 = NEW Engine(300, 15.5)
+
+
+DECLARE van1 : Van
+
+SET van1 = NEW Van("ABC123", 80, engine1, 1000)
+
+
+DECLARE route1 : Route
+
+SET route1 = NEW Route()
+
+
+DECLARE stop1 : Stop
+
+SET stop1 = NEW Stop("Main Street", "Package A")
+
+
+CALL route1.addStop(stop1)
+
+DECLARE deliveryTime : Double
+
+SET deliveryTime = van1.calculateDeliveryTime(100)
+
+PRINT deliveryTime
+
+END PROGRAM
