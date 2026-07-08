@@ -48,9 +48,7 @@ CLASS DrumKit INHERITS Instrument
         numberOfDrums : Integer
 
 
-    CONSTRUCTOR DrumKit(brand : String,
-                        price : Double,
-                        numberOfDrums : Integer)
+    CONSTRUCTOR DrumKit(brand : String,price : Double,numberOfDrums : Integer)
 
         CALL SUPER(brand, price)
 
@@ -827,6 +825,7 @@ CLASS Route
 
 
 END CLASS
+
 
 
 START PROGRAM
