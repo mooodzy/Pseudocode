@@ -7,19 +7,16 @@ CLASS Instrument
         brand : String
         price : Double
 
-
     CONSTRUCTOR Instrument(brand : String,price : Double)
 
         SET this.brand = brand
         SET this.price = price
-
 
     METHODS
 
         describePlayStyle() : String
 
             RETURN "Instrument playing style"
-
 
 END CLASS
 
@@ -41,7 +38,6 @@ CLASS Guitar INHERITS Instrument
 
         RETURN "Strummed or plucked"
 
-
 END CLASS
 
 
@@ -59,7 +55,6 @@ CLASS DrumKit INHERITS Instrument
         CALL SUPER(brand, price)
 
         SET this.numberOfDrums = numberOfDrums
-
 
     OVERRIDE METHOD describePlayStyle() : String
 
@@ -103,14 +98,12 @@ CLASS Store
         CREATE empty instruments list
 
 
-
     METHODS
 
 
         addInstrument(instrument : Instrument)
 
             ADD instrument TO instruments
-
 
 
         displayInstruments()
@@ -131,7 +124,6 @@ CLASS Store
 
 
 END CLASS
-
 
 
 START PROGRAM
@@ -163,7 +155,6 @@ CALL store1.addInstrument(guitar1)
 CALL store1.addInstrument(drum1)
 
 CALL store1.addInstrument(keyboard1)
-
 
 
 CALL store1.displayInstruments()
@@ -790,11 +781,7 @@ CLASS SharedRide INHERITS StandardRide
 
     CONSTRUCTOR SharedRide(pickupLocation : String,dropOffLocation : String,route : Route,distance : Double,ratePerKilometer : Double,numberOfPassengers : Integer)
 
-        CALL SUPER(pickupLocation,
-                   dropOffLocation,
-                   route,
-                   distance,
-                   ratePerKilometer)
+        CALL SUPER(pickupLocation,dropOffLocation,route,distance,ratePerKilometer)
 
         SET this.numberOfPassengers = numberOfPassengers
 
@@ -842,7 +829,6 @@ CLASS Route
 END CLASS
 
 
-
 START PROGRAM
 
 DECLARE route1 : Route
@@ -878,26 +864,3 @@ PRINT ride3.calculateFare()
 
 
 END PROGRAM
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
