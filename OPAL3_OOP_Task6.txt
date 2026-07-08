@@ -8,8 +8,7 @@ CLASS Instrument
         price : Double
 
 
-    CONSTRUCTOR Instrument(brand : String,
-                           price : Double)
+    CONSTRUCTOR Instrument(brand : String,price : Double)
 
         SET this.brand = brand
         SET this.price = price
@@ -32,14 +31,11 @@ CLASS Guitar INHERITS Instrument
         numberOfStrings : Integer
 
 
-    CONSTRUCTOR Guitar(brand : String,
-                       price : Double,
-                       numberOfStrings : Integer)
+    CONSTRUCTOR Guitar(brand : String,price : Double,numberOfStrings : Integer)
 
         CALL SUPER(brand, price)
 
         SET this.numberOfStrings = numberOfStrings
-
 
     OVERRIDE METHOD describePlayStyle() : String
 
@@ -80,9 +76,7 @@ CLASS Keyboard INHERITS Instrument
         numberOfKeys : Integer
 
 
-    CONSTRUCTOR Keyboard(brand : String,
-                         price : Double,
-                         numberOfKeys : Integer)
+    CONSTRUCTOR Keyboard(brand : String,price : Double,numberOfKeys : Integer)
 
         CALL SUPER(brand, price)
 
@@ -151,32 +145,17 @@ SET store1 = NEW Store()
 
 DECLARE guitar1 : Guitar
 
-SET guitar1 = NEW Guitar(
-    "Yamaha",
-    500.0,
-    6
-)
-
+SET guitar1 = NEW Guitar("Yamaha",500.0, 6)
 
 
 DECLARE drum1 : DrumKit
 
-SET drum1 = NEW DrumKit(
-    "Pearl",
-    800.0,
-    5
-)
-
+SET drum1 = NEW DrumKit("Pearl",800.0,5)
 
 
 DECLARE keyboard1 : Keyboard
 
-SET keyboard1 = NEW Keyboard(
-    "Casio",
-    300.0,
-    61
-)
-
+SET keyboard1 = NEW Keyboard("Casio",300.0,61)
 
 
 CALL store1.addInstrument(guitar1)
@@ -189,6 +168,203 @@ CALL store1.addInstrument(keyboard1)
 
 CALL store1.displayInstruments()
 
+END PROGRAM
+
+
+
+Task 304: Fitness App Workouts
+
+
+
+CLASS Workout
+
+    ATTRIBUTES
+        date : String
+        duration : Double
+
+
+    CONSTRUCTOR Workout(date : String,duration : Double)
+
+        SET this.date = date
+        SET this.duration = duration
+
+
+    METHODS
+
+        calculateCalories() : Double
+
+            RETURN 0.0
+
+END CLASS
+
+
+
+CLASS RunningWorkout INHERITS Workout
+
+    ATTRIBUTES
+        distance : Double
+        pace : Double
+
+
+    CONSTRUCTOR RunningWorkout(date : String,duration : Double,distance : Double,pace : Double)
+
+        CALL SUPER(date, duration)
+
+        SET this.distance = distance
+        SET this.pace = pace
+
+
+    OVERRIDE METHOD calculateCalories() : Double
+
+        RETURN distance * pace * 10
+
+END CLASS
+
+
+
+CLASS CyclingWorkout INHERITS Workout
+
+    ATTRIBUTES
+        distance : Double
+        resistanceLevel : Integer
+
+
+    CONSTRUCTOR CyclingWorkout(date : String,
+                               duration : Double,
+                               distance : Double,
+                               resistanceLevel : Integer)
+
+        CALL SUPER(date, duration)
+
+        SET this.distance = distance
+        SET this.resistanceLevel = resistanceLevel
+
+
+    OVERRIDE METHOD calculateCalories() : Double
+
+        RETURN distance * resistanceLevel * 8
+
+END CLASS
+
+
+
+CLASS WeightTrainingWorkout INHERITS Workout
+
+    ATTRIBUTES
+        sets : Integer
+        reps : Integer
+
+
+    CONSTRUCTOR WeightTrainingWorkout(date : String,
+                                      duration : Double,
+                                      sets : Integer,
+                                      reps : Integer)
+
+        CALL SUPER(date, duration)
+
+        SET this.sets = sets
+        SET this.reps = reps
+
+
+    OVERRIDE METHOD calculateCalories() : Double
+
+        RETURN sets * reps * 2
+
+END CLASS
+
+
+
+CLASS FitnessLog
+
+    ATTRIBUTES
+        workouts : List<Workout>
+
+
+    CONSTRUCTOR FitnessLog()
+
+        CREATE empty workouts list
+
+
+    METHODS
+
+        addWorkout(workout : Workout)
+
+            ADD workout TO workouts
+
+
+        displayWorkouts()
+
+            SET i = 0
+
+            WHILE i < size of workouts
+
+                PRINT workouts[i].date
+
+                PRINT workouts[i].calculateCalories()
+
+                SET i = i + 1
+
+            END WHILE
+
+END CLASS
+
+
+
+START PROGRAM
+
+
+DECLARE log1 : FitnessLog
+
+SET log1 = NEW FitnessLog()
+
+
+
+DECLARE run1 : RunningWorkout
+
+SET run1 = NEW RunningWorkout(
+    "2026-07-08",
+    45,
+    8,
+    6
+)
+
+
+
+DECLARE cycle1 : CyclingWorkout
+
+SET cycle1 = NEW CyclingWorkout(
+    "2026-07-09",
+    60,
+    20,
+    4
+)
+
+
+
+DECLARE weight1 : WeightTrainingWorkout
+
+SET weight1 = NEW WeightTrainingWorkout(
+    "2026-07-10",
+    50,
+    5,
+    12
+)
+
+
+
+CALL log1.addWorkout(run1)
+
+CALL log1.addWorkout(cycle1)
+
+CALL log1.addWorkout(weight1)
+
+
+
+CALL log1.displayWorkouts()
+
 
 
 END PROGRAM
+
+
+
