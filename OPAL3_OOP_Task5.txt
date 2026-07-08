@@ -251,11 +251,7 @@ CLASS CommissionEmployee INHERITS Employee
         sales : Double
         commissionRate : Double
 
-    CONSTRUCTOR CommissionEmployee(name : String, id : Integer,
-                                   hireDate : String,
-                                   basePay : Double,
-                                   sales : Double,
-                                   commissionRate : Double)
+    CONSTRUCTOR CommissionEmployee(name : String, id : Integer,hireDate : String,basePay : Double,sales : Double,commissionRate : Double)
         CALL Employee(name, id, hireDate)
         SET basePay = basePay
         SET sales = sales
@@ -622,9 +618,6 @@ END PROGRAM
 
 
 
-
-
-
 CLASS Subscription
 
     ATTRIBUTES
@@ -783,7 +776,6 @@ CLASS UserAccount
             PRINT subscription.getDeviceLimit()
 
 END CLASS
-
 
 
 START PROGRAM
@@ -1365,11 +1357,9 @@ DECLARE nurse1 : Nurse
 SET nurse1 = NEW Nurse("Sara", 102, 50)
 
 
-
 DECLARE surgeon1 : Surgeon
 
 SET surgeon1 = NEW Surgeon("Ali", 103, 7000, 1000)
-
 
 
 CALL doctor1.approveTreatment()
@@ -1379,9 +1369,7 @@ CALL nurse1.administerMedication()
 CALL surgeon1.performOperation()
 
 
-
 CALL ward1.displayShifts()
-
 
 
 END PROGRAM
@@ -1501,9 +1489,7 @@ CLASS CoverImage
         height : Integer
 
 
-    CONSTRUCTOR CoverImage(filePath : String,
-                           width : Integer,
-                           height : Integer)
+    CONSTRUCTOR CoverImage(filePath : String, width : Integer,height : Integer)
 
         SET this.filePath = filePath
         SET this.width = width
@@ -1554,23 +1540,11 @@ START PROGRAM
 
 DECLARE cover1 : CoverImage
 
-SET cover1 = NEW CoverImage(
-    "cover.jpg",
-    500,
-    700
-)
-
-
+SET cover1 = NEW CoverImage("cover.jpg", 500,700)
 
 DECLARE novel1 : Novel
 
-SET novel1 = NEW Novel(
-    "The Story",
-    "Ahmed",
-    300,
-    cover1,
-    150
-)
+SET novel1 = NEW Novel("The Story","Ahmed",300, cover1,150)
 
 
 
@@ -1582,14 +1556,7 @@ SET magazine1 = NEW Magazine("Tech Magazine","Sara",100,cover1,10,5)
 
 DECLARE audiobook1 : Audiobook
 
-SET audiobook1 = NEW Audiobook(
-    "Learning Book",
-    "Ali",
-    200,
-    cover1,
-    10,
-    4
-)
+SET audiobook1 = NEW Audiobook("Learning Book", "Ali", 200,cover1,10,4)
 
 
 
@@ -1597,18 +1564,13 @@ DECLARE library1 : Library
 
 SET library1 = NEW Library()
 
-
-
 CALL library1.addPublication(novel1)
 
 CALL library1.addPublication(magazine1)
 
 CALL library1.addPublication(audiobook1)
 
-
-
 CALL library1.displayProgress()
-
 
 
 END PROGRAM
@@ -1811,7 +1773,6 @@ CLASS Room
 END CLASS
 
 
-
 START PROGRAM
 
 
@@ -1841,7 +1802,6 @@ DECLARE room1 : Room
 SET room1 = NEW Room("Living Room")
 
 
-
 CALL room1.addDevice(camera1)
 
 CALL room1.addDevice(light1)
@@ -1851,24 +1811,5 @@ CALL room1.addDevice(thermostat1)
 CALL room1.displayDevices()
 
 END PROGRAM
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
