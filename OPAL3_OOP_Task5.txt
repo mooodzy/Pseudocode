@@ -1324,3 +1324,251 @@ CALL ward1.displayShifts()
 END PROGRAM
 
 
+
+
+
+
+
+Task 301: E-book Reader App
+
+CLASS Publication
+
+    ATTRIBUTES
+        title : String
+        author : String
+        totalPages : Integer
+        coverImage : CoverImage
+
+
+    CONSTRUCTOR Publication(title : String,author : String,totalPages : Integer,coverImage : CoverImage)
+
+        SET this.title = title
+        SET this.author = author
+        SET this.totalPages = totalPages
+        SET this.coverImage = coverImage
+
+
+    METHODS
+
+        getProgress() : Double
+            RETURN 0.0
+
+END CLASS
+
+
+
+CLASS Novel INHERITS Publication
+
+    ATTRIBUTES
+        pagesRead : Integer
+
+
+    CONSTRUCTOR Novel(title : String,
+                      author : String,
+                      totalPages : Integer,
+                      coverImage : CoverImage,
+                      pagesRead : Integer)
+
+        CALL SUPER(title, author, totalPages, coverImage)
+
+        SET this.pagesRead = pagesRead
+
+
+    OVERRIDE METHOD getProgress() : Double
+
+        RETURN (pagesRead / totalPages) * 100
+
+END CLASS
+
+
+
+CLASS Magazine INHERITS Publication
+
+    ATTRIBUTES
+        totalArticles : Integer
+        openedArticles : Integer
+
+
+    CONSTRUCTOR Magazine(title : String,author : String,totalPages : Integer, coverImage : CoverImage,
+    totalArticles : Integer,openedArticles : Integer)
+
+        CALL SUPER(title, author, totalPages, coverImage)
+
+        SET this.totalArticles = totalArticles
+        SET this.openedArticles = openedArticles
+
+
+    OVERRIDE METHOD getProgress() : Double
+
+        RETURN (openedArticles / totalArticles) * 100
+
+END CLASS
+
+
+
+CLASS Audiobook INHERITS Publication
+
+    ATTRIBUTES
+        totalListeningTime : Double
+        listenedTime : Double
+
+
+    CONSTRUCTOR Audiobook(title : String,author : String,totalPages : Integer,coverImage : CoverImage,
+    totalListeningTime : Double,listenedTime : Double)
+
+        CALL SUPER(title, author, totalPages, coverImage)
+
+        SET this.totalListeningTime = totalListeningTime
+        SET this.listenedTime = listenedTime
+
+
+    OVERRIDE METHOD getProgress() : Double
+
+        RETURN (listenedTime / totalListeningTime) * 100
+
+END CLASS
+
+
+
+CLASS CoverImage
+
+    ATTRIBUTES
+        filePath : String
+        width : Integer
+        height : Integer
+
+
+    CONSTRUCTOR CoverImage(filePath : String,
+                           width : Integer,
+                           height : Integer)
+
+        SET this.filePath = filePath
+        SET this.width = width
+        SET this.height = height
+
+END CLASS
+
+
+
+CLASS Library
+
+    ATTRIBUTES
+        publications : List<Publication>
+
+
+    CONSTRUCTOR Library()
+
+        CREATE empty publications list
+
+
+    METHODS
+
+        addPublication(publication : Publication)
+
+            ADD publication TO publications
+
+
+        displayProgress()
+
+            SET i = 0
+
+            WHILE i < size of publications
+
+                PRINT publications[i].title
+
+                PRINT publications[i].getProgress()
+
+                SET i = i + 1
+
+            END WHILE
+
+END CLASS
+
+
+
+START PROGRAM
+
+
+DECLARE cover1 : CoverImage
+
+SET cover1 = NEW CoverImage(
+    "cover.jpg",
+    500,
+    700
+)
+
+
+
+DECLARE novel1 : Novel
+
+SET novel1 = NEW Novel(
+    "The Story",
+    "Ahmed",
+    300,
+    cover1,
+    150
+)
+
+
+
+DECLARE magazine1 : Magazine
+
+SET magazine1 = NEW Magazine("Tech Magazine","Sara",100,cover1,10,5)
+
+
+
+DECLARE audiobook1 : Audiobook
+
+SET audiobook1 = NEW Audiobook(
+    "Learning Book",
+    "Ali",
+    200,
+    cover1,
+    10,
+    4
+)
+
+
+
+DECLARE library1 : Library
+
+SET library1 = NEW Library()
+
+
+
+CALL library1.addPublication(novel1)
+
+CALL library1.addPublication(magazine1)
+
+CALL library1.addPublication(audiobook1)
+
+
+
+CALL library1.displayProgress()
+
+
+
+END PROGRAM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
