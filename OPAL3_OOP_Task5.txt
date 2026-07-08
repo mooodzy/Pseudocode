@@ -560,3 +560,192 @@ END PROGRAM
 
 
 
+
+
+CLASS Subscription
+
+    ATTRIBUTES
+        startDate : String
+        monthlyPrice : Double
+
+    CONSTRUCTOR Subscription(startDate : String, monthlyPrice : Double)
+
+        SET this.startDate = startDate
+        SET this.monthlyPrice = monthlyPrice
+
+
+    METHODS
+
+        isActive() : Boolean
+            RETURN TRUE
+
+        getStreamingQuality() : String
+            PRINT "Standard Quality"
+
+        getDeviceLimit() : Integer
+            RETURN 1
+
+END CLASS
+
+
+
+CLASS BasicPlan INHERITS Subscription
+
+    ATTRIBUTES
+        quality : String
+        deviceLimit : Integer
+
+    CONSTRUCTOR BasicPlan(startDate : String,monthlyPrice : Double)
+
+        CALL SUPER(startDate, monthlyPrice)
+
+        SET quality = "Standard Definition"
+        SET deviceLimit = 1
+
+
+    OVERRIDE METHOD getStreamingQuality() : String
+
+        RETURN "Standard Definition"
+
+
+    OVERRIDE METHOD getDeviceLimit() : Integer
+
+        RETURN 1
+
+END CLASS
+
+
+
+CLASS StandardPlan INHERITS Subscription
+
+    ATTRIBUTES
+        quality : String
+        deviceLimit : Integer
+
+    CONSTRUCTOR StandardPlan(startDate : String,monthlyPrice : Double)
+
+        CALL SUPER(startDate, monthlyPrice)
+
+        SET quality = "High Definition"
+        SET deviceLimit = 2
+
+
+    OVERRIDE METHOD getStreamingQuality() : String
+
+        RETURN "High Definition"
+
+
+    OVERRIDE METHOD getDeviceLimit() : Integer
+
+        RETURN 2
+
+END CLASS
+
+
+
+CLASS PremiumPlan INHERITS Subscription
+
+    ATTRIBUTES
+        quality : String
+        deviceLimit : Integer
+        offlineDownloads : Boolean
+
+    CONSTRUCTOR PremiumPlan(startDate : String,monthlyPrice : Double)
+
+        CALL SUPER(startDate, monthlyPrice)
+
+        SET quality = "Ultra High Definition"
+        SET deviceLimit = 4
+        SET offlineDownloads = TRUE
+
+
+    OVERRIDE METHOD getStreamingQuality() : String
+
+        RETURN "Ultra High Definition"
+
+
+    OVERRIDE METHOD getDeviceLimit() : Integer
+
+        RETURN 4
+
+END CLASS
+
+
+
+CLASS WatchRecord
+
+    ATTRIBUTES
+        title : String
+        watchDate : String
+
+
+    CONSTRUCTOR WatchRecord(title : String,watchDate : String)
+
+        SET this.title = title
+        SET this.watchDate = watchDate
+
+END CLASS
+
+
+
+CLASS UserAccount
+
+    ATTRIBUTES
+        subscription : Subscription
+        watchHistory : List<WatchRecord>
+
+
+    CONSTRUCTOR UserAccount()
+
+        SET subscription = NULL
+        CREATE empty watchHistory list
+
+
+    METHODS
+
+        setSubscription(plan : Subscription)
+
+            SET subscription = plan
+
+
+        addWatchRecord(record : WatchRecord)
+
+            ADD record TO watchHistory
+
+
+        displaySubscription()
+
+            PRINT subscription.getStreamingQuality()
+
+            PRINT subscription.getDeviceLimit()
+
+END CLASS
+
+
+
+START PROGRAM
+
+DECLARE user1 : UserAccount
+
+SET user1 = NEW UserAccount()
+
+DECLARE plan1 : PremiumPlan
+
+SET plan1 = NEW PremiumPlan("2026-01-01", 15.99)
+
+CALL user1.setSubscription(plan1)
+
+DECLARE record1 : WatchRecord
+
+SET record1 = NEW WatchRecord("Movie A", "2026-07-01")
+
+CALL user1.addWatchRecord(record1)
+
+CALL user1.displaySubscription()
+
+END PROGRAM
+
+
+
+
+
