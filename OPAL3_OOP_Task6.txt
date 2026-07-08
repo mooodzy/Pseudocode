@@ -229,13 +229,9 @@ CLASS CyclingWorkout INHERITS Workout
         resistanceLevel : Integer
 
 
-    CONSTRUCTOR CyclingWorkout(date : String,
-                               duration : Double,
-                               distance : Double,
-                               resistanceLevel : Integer)
+    CONSTRUCTOR CyclingWorkout(date : String,duration : Double,distance : Double,resistanceLevel : Integer)
 
         CALL SUPER(date, duration)
-
         SET this.distance = distance
         SET this.resistanceLevel = resistanceLevel
 
@@ -255,19 +251,14 @@ CLASS WeightTrainingWorkout INHERITS Workout
         reps : Integer
 
 
-    CONSTRUCTOR WeightTrainingWorkout(date : String,
-                                      duration : Double,
-                                      sets : Integer,
-                                      reps : Integer)
+    CONSTRUCTOR WeightTrainingWorkout(date : String,duration : Double,sets : Integer,reps : Integer)
 
         CALL SUPER(date, duration)
-
         SET this.sets = sets
         SET this.reps = reps
 
 
     OVERRIDE METHOD calculateCalories() : Double
-
         RETURN sets * reps * 2
 
 END CLASS
@@ -277,7 +268,7 @@ END CLASS
 CLASS FitnessLog
 
     ATTRIBUTES
-        workouts : List<Workout>
+        workouts : List(Workout)
 
 
     CONSTRUCTOR FitnessLog()
@@ -321,35 +312,16 @@ SET log1 = NEW FitnessLog()
 
 DECLARE run1 : RunningWorkout
 
-SET run1 = NEW RunningWorkout(
-    "2026-07-08",
-    45,
-    8,
-    6
-)
-
-
+SET run1 = NEW RunningWorkout("2026-07-08",45,8,6)
 
 DECLARE cycle1 : CyclingWorkout
 
-SET cycle1 = NEW CyclingWorkout(
-    "2026-07-09",
-    60,
-    20,
-    4
-)
-
+SET cycle1 = NEW CyclingWorkout("2026-07-09",60,20, 4)
 
 
 DECLARE weight1 : WeightTrainingWorkout
 
-SET weight1 = NEW WeightTrainingWorkout(
-    "2026-07-10",
-    50,
-    5,
-    12
-)
-
+SET weight1 = NEW WeightTrainingWorkout("2026-07-10", 50, 5,12)
 
 
 CALL log1.addWorkout(run1)
@@ -359,12 +331,200 @@ CALL log1.addWorkout(cycle1)
 CALL log1.addWorkout(weight1)
 
 
-
 CALL log1.displayWorkouts()
-
 
 
 END PROGRAM
 
+Task 295: Zoo Animal Enclosures
 
 
+
+CLASS Animal
+
+    ATTRIBUTES
+        name : String
+        age : Integer
+        dietType : String
+
+
+    CONSTRUCTOR Animal(name : String,age : Integer,dietType : String)
+
+        SET this.name = name
+        SET this.age = age
+        SET this.dietType = dietType
+
+
+    METHODS
+
+        makeSound() : String
+
+            RETURN "Animal Sound"
+
+
+        describeMovement() : String
+
+            RETURN "Animal Movement"
+
+END CLASS
+
+
+
+CLASS Bird INHERITS Animal
+
+    ATTRIBUTES
+        canFly : Boolean
+        laysEggs : Boolean
+
+
+    CONSTRUCTOR Bird(name : String,age : Integer,dietType : String,canFly : Boolean,laysEggs : Boolean)
+
+        CALL SUPER(name, age, dietType)
+
+        SET this.canFly = canFly
+        SET this.laysEggs = laysEggs
+
+
+    OVERRIDE METHOD makeSound() : String
+
+        RETURN "Chirp"
+
+
+    OVERRIDE METHOD describeMovement() : String
+
+        RETURN "Flies"
+
+END CLASS
+
+
+
+CLASS Fish INHERITS Animal
+
+    ATTRIBUTES
+        swims : Boolean
+        hasGills : Boolean
+
+
+    CONSTRUCTOR Fish(name : String,age : Integer,dietType : String,swims : Boolean,hasGills : Boolean)
+
+        CALL SUPER(name, age, dietType)
+        SET this.swims = swims
+        SET this.hasGills = hasGills
+
+
+    OVERRIDE METHOD makeSound() : String
+
+        RETURN "Blub"
+
+
+    OVERRIDE METHOD describeMovement() : String
+
+        RETURN "Swims"
+
+END CLASS
+
+
+
+CLASS Mammal INHERITS Animal
+
+    ATTRIBUTES
+        hasFur : Boolean
+        givesBirth : Boolean
+
+
+    CONSTRUCTOR Mammal(name : String,age : Integer,dietType : String,hasFur : Boolean,givesBirth : Boolean)
+
+        CALL SUPER(name, age, dietType)
+        SET this.hasFur = hasFur
+        SET this.givesBirth = givesBirth
+
+
+    OVERRIDE METHOD makeSound() : String
+
+        RETURN "Roar"
+
+
+    OVERRIDE METHOD describeMovement() : String
+
+        RETURN "Walks"
+
+END CLASS
+
+
+
+CLASS Enclosure
+
+    ATTRIBUTES
+        temperature : Double
+        animals : List(Animal)
+
+
+    CONSTRUCTOR Enclosure(temperature : Double)
+
+        SET this.temperature = temperature
+
+        CREATE empty animals list
+
+
+    METHODS
+
+        addAnimal(animal : Animal)
+
+            ADD animal TO animals
+
+
+        displayAnimals()
+
+            SET i = 0
+
+            WHILE i < size of animals
+
+                PRINT animals[i].name
+
+                PRINT animals[i].makeSound()
+
+                PRINT animals[i].describeMovement()
+
+                SET i = i + 1
+
+            END WHILE
+
+END CLASS
+
+
+
+START PROGRAM
+
+
+DECLARE enclosure1 : Enclosure
+
+SET enclosure1 = NEW Enclosure(25.0)
+
+
+
+DECLARE bird1 : Bird
+
+SET bird1 = NEW Bird("Parrot",3,"Seeds", TRUE,TRUE)
+
+DECLARE fish1 : Fish
+
+SET fish1 = NEW Fish("Goldfish", 1,"Flakes",TRUE,TRUE)
+
+
+
+DECLARE mammal1 : Mammal
+
+SET mammal1 = NEW Mammal("Lion", 5,"Meat",TRUE,TRUE)
+
+CALL enclosure1.addAnimal(bird1)
+
+CALL enclosure1.addAnimal(fish1)
+
+CALL enclosure1.addAnimal(mammal1)
+
+
+
+CALL enclosure1.displayAnimals(
+
+
+END PROGRAM
