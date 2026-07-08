@@ -1,0 +1,194 @@
+Task 303: Musical Instruments Store  
+
+
+CLASS Instrument
+
+    ATTRIBUTES
+        brand : String
+        price : Double
+
+
+    CONSTRUCTOR Instrument(brand : String,
+                           price : Double)
+
+        SET this.brand = brand
+        SET this.price = price
+
+
+    METHODS
+
+        describePlayStyle() : String
+
+            RETURN "Instrument playing style"
+
+
+END CLASS
+
+
+
+CLASS Guitar INHERITS Instrument
+
+    ATTRIBUTES
+        numberOfStrings : Integer
+
+
+    CONSTRUCTOR Guitar(brand : String,
+                       price : Double,
+                       numberOfStrings : Integer)
+
+        CALL SUPER(brand, price)
+
+        SET this.numberOfStrings = numberOfStrings
+
+
+    OVERRIDE METHOD describePlayStyle() : String
+
+        RETURN "Strummed or plucked"
+
+
+END CLASS
+
+
+
+CLASS DrumKit INHERITS Instrument
+
+    ATTRIBUTES
+        numberOfDrums : Integer
+
+
+    CONSTRUCTOR DrumKit(brand : String,
+                        price : Double,
+                        numberOfDrums : Integer)
+
+        CALL SUPER(brand, price)
+
+        SET this.numberOfDrums = numberOfDrums
+
+
+    OVERRIDE METHOD describePlayStyle() : String
+
+        RETURN "Struck"
+
+
+END CLASS
+
+
+
+CLASS Keyboard INHERITS Instrument
+
+    ATTRIBUTES
+        numberOfKeys : Integer
+
+
+    CONSTRUCTOR Keyboard(brand : String,
+                         price : Double,
+                         numberOfKeys : Integer)
+
+        CALL SUPER(brand, price)
+
+        SET this.numberOfKeys = numberOfKeys
+
+
+    OVERRIDE METHOD describePlayStyle() : String
+
+        RETURN "Pressed"
+
+
+END CLASS
+
+
+
+CLASS Store
+
+    ATTRIBUTES
+        instruments : List<Instrument>
+
+
+    CONSTRUCTOR Store()
+
+        CREATE empty instruments list
+
+
+
+    METHODS
+
+
+        addInstrument(instrument : Instrument)
+
+            ADD instrument TO instruments
+
+
+
+        displayInstruments()
+
+            SET i = 0
+
+            WHILE i < size of instruments
+
+                PRINT instruments[i].brand
+
+                PRINT instruments[i].price
+
+                PRINT instruments[i].describePlayStyle()
+
+                SET i = i + 1
+
+            END WHILE
+
+
+END CLASS
+
+
+
+START PROGRAM
+
+
+DECLARE store1 : Store
+
+SET store1 = NEW Store()
+
+
+
+DECLARE guitar1 : Guitar
+
+SET guitar1 = NEW Guitar(
+    "Yamaha",
+    500.0,
+    6
+)
+
+
+
+DECLARE drum1 : DrumKit
+
+SET drum1 = NEW DrumKit(
+    "Pearl",
+    800.0,
+    5
+)
+
+
+
+DECLARE keyboard1 : Keyboard
+
+SET keyboard1 = NEW Keyboard(
+    "Casio",
+    300.0,
+    61
+)
+
+
+
+CALL store1.addInstrument(guitar1)
+
+CALL store1.addInstrument(drum1)
+
+CALL store1.addInstrument(keyboard1)
+
+
+
+CALL store1.displayInstruments()
+
+
+
+END PROGRAM
