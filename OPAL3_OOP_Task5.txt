@@ -1370,7 +1370,7 @@ END PROGRAM
 
 Task 299: Bank Cards  
 
-CLASS Card
+CLASS Card (ABSTRACT)
 
     ATTRIBUTES
         cardNumber : String
@@ -1378,19 +1378,37 @@ CLASS Card
         status : String
         chip : Chip
 
-    CONSTRUCTOR Card(cardNumber : String,expiryDate : String,chip : Chip)
+
+    CONSTRUCTOR Card(cardNumber : String, expiryDate : String, chip : Chip)
 
         SET this.cardNumber = cardNumber
+
         SET this.expiryDate = expiryDate
+
         SET this.status = "active"
+
         SET this.chip = chip
 
 
-    METHODS
 
-        authorisePurchase(amount : Double) : Boolean
+    ABSTRACT METHOD authorisePurchase(amount : Double) : Boolean
 
-            RETURN FALSE
+
+
+    METHOD blockCard()
+
+        SET status = "blocked"
+
+        PRINT "Card blocked"
+
+
+
+    METHOD unblockCard()
+
+        SET status = "active"
+
+        PRINT "Card unblocked"
+
 
 END CLASS
 
@@ -1402,14 +1420,24 @@ CLASS DebitCard INHERITS Card
         accountBalance : Double
 
 
-    CONSTRUCTOR DebitCard(cardNumber : String,expiryDate : String,chip : Chip,accountBalance : Double)
+    CONSTRUCTOR DebitCard(cardNumber : String, expiryDate : String, chip : Chip, accountBalance : Double)
 
         CALL SUPER(cardNumber, expiryDate, chip)
 
         SET this.accountBalance = accountBalance
 
 
+
     OVERRIDE METHOD authorisePurchase(amount : Double) : Boolean
+
+        IF status = "blocked" THEN
+
+            PRINT "Card is blocked"
+
+            RETURN FALSE
+
+        END IF
+
 
         IF accountBalance >= amount THEN
 
@@ -1427,6 +1455,7 @@ CLASS DebitCard INHERITS Card
 
         END IF
 
+
 END CLASS
 
 
@@ -1438,7 +1467,7 @@ CLASS CreditCard INHERITS Card
         unpaidPurchases : List(Double)
 
 
-    CONSTRUCTOR CreditCard(cardNumber : String,expiryDate : String,chip : Chip,creditLimit : Double)
+    CONSTRUCTOR CreditCard(cardNumber : String, expiryDate : String, chip : Chip, creditLimit : Double)
 
         CALL SUPER(cardNumber, expiryDate, chip)
 
@@ -1448,47 +1477,75 @@ CLASS CreditCard INHERITS Card
 
 
 
-    METHODS
+    OVERRIDE METHOD authorisePurchase(amount : Double) : Boolean
 
+        IF status = "blocked" THEN
 
-        OVERRIDE METHOD authorisePurchase(amount : Double) : Boolean
+            PRINT "Card is blocked"
 
-            IF calculateOutstandingBalance() + amount <= creditLimit THEN
+            RETURN FALSE
 
-                ADD amount TO unpaidPurchases
-
-                PRINT "Credit purchase approved"
-
-                RETURN TRUE
-
-            ELSE
-
-                PRINT "Credit limit exceeded"
-
-                RETURN FALSE
-
-            END IF
+        END IF
 
 
 
-        calculateOutstandingBalance() : Double
+        IF calculateOutstandingBalance() + amount <= creditLimit THEN
 
-            DECLARE total : Double
+            ADD amount TO unpaidPurchases
 
-            SET total = 0
+            PRINT "Credit purchase approved"
 
-            SET i = 0
+            RETURN TRUE
 
-            WHILE i < size of unpaidPurchases
+        ELSE
 
-                SET total = total + unpaidPurchases[i]
+            PRINT "Credit limit exceeded"
 
-                SET i = i + 1
+            RETURN FALSE
 
-            END WHILE
+        END IF
 
 
-            RETURN total
+
+    METHOD calculateOutstandingBalance() : Double
+
+        DECLARE total : Double
+
+        DECLARE i : Integer
+
+
+        SET total = 0
+
+        SET i = 0
+
+
+        WHILE i < size of unpaidPurchases
+
+            SET total = total + unpaidPurchases[i]
+
+            SET i = i + 1
+
+        END WHILE
+
+
+        RETURN total
+
+
+
+    METHOD makePayment(amount : Double)
+
+        IF amount <= calculateOutstandingBalance() THEN
+
+            REMOVE amount FROM unpaidPurchases
+
+            PRINT "Payment completed"
+
+        ELSE
+
+            PRINT "Payment amount is too high"
+
+        END IF
+
 
 END CLASS
 
@@ -1499,9 +1556,11 @@ CLASS Chip
     ATTRIBUTES
         encryptedSecurityData : String
 
+
     CONSTRUCTOR Chip(encryptedSecurityData : String)
 
         SET this.encryptedSecurityData = encryptedSecurityData
+
 
 END CLASS
 
@@ -1509,23 +1568,48 @@ END CLASS
 
 START PROGRAM
 
+
 DECLARE chip1 : Chip
 
 SET chip1 = NEW Chip("EncryptedData123")
 
+
+
 DECLARE debit1 : DebitCard
 
-SET debit1 = NEW DebitCard("11112222","12/2028",chip1,5000)
+SET debit1 = NEW DebitCard("11112222", "12/2028", chip1, 5000)
+
+
 
 DECLARE credit1 : CreditCard
 
-SET credit1 = NEW CreditCard("33334444","10/2029", chip1,10000)
+SET credit1 = NEW CreditCard("33334444", "10/2029", chip1, 10000)
+
+
 
 CALL debit1.authorisePurchase(200)
 
+
+
 CALL credit1.authorisePurchase(500)
 
+
+
 PRINT credit1.calculateOutstandingBalance()
+
+
+
+CALL credit1.makePayment(200)
+
+
+
+PRINT credit1.calculateOutstandingBalance()
+
+
+
+CALL credit1.blockCard()
+
+
 
 END PROGRAM
 
