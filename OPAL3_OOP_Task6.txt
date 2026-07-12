@@ -832,6 +832,8 @@ CALL account1.displayBills()
 
 END PROGRAM
 
+
+
 Task 307: Ride-Sharing Vehicle Tiers  
 
 CLASS Ride (ABSTRACT)
@@ -843,10 +845,7 @@ CLASS Ride (ABSTRACT)
         route : Route
 
 
-    CONSTRUCTOR Ride(pickupLocation : String,
-                     dropOffLocation : String,
-                     distance : Double,
-                     route : Route)
+    CONSTRUCTOR Ride(pickupLocation : String,dropOffLocation : String,distance : Double, route : Route)
 
         SET this.pickupLocation = pickupLocation
 
@@ -877,11 +876,7 @@ CLASS StandardRide INHERITS Ride
         ratePerKilometer : Double
 
 
-    CONSTRUCTOR StandardRide(pickupLocation : String,
-                             dropOffLocation : String,
-                             distance : Double,
-                             route : Route,
-                             ratePerKilometer : Double)
+    CONSTRUCTOR StandardRide(pickupLocation : String,dropOffLocation : String,distance : Double,route : Route,ratePerKilometer : Double)
 
         CALL SUPER(pickupLocation, dropOffLocation, distance, route)
 
@@ -905,12 +900,7 @@ CLASS PremiumRide INHERITS Ride
         comfortSurcharge : Double
 
 
-    CONSTRUCTOR PremiumRide(pickupLocation : String,
-                            dropOffLocation : String,
-                            distance : Double,
-                            route : Route,
-                            ratePerKilometer : Double,
-                            comfortSurcharge : Double)
+    CONSTRUCTOR PremiumRide(pickupLocation : String,dropOffLocation : String,distance : Double,route : Route,ratePerKilometer : Double,comfortSurcharge : Double)
 
         CALL SUPER(pickupLocation, dropOffLocation, distance, route)
 
@@ -935,18 +925,9 @@ CLASS SharedRide INHERITS StandardRide
         numberOfPassengers : Integer
 
 
-    CONSTRUCTOR SharedRide(pickupLocation : String,
-                           dropOffLocation : String,
-                           distance : Double,
-                           route : Route,
-                           ratePerKilometer : Double,
-                           numberOfPassengers : Integer)
+    CONSTRUCTOR SharedRide(pickupLocation : String,dropOffLocation : String,distance : Double,route : Route,ratePerKilometer : Double,numberOfPassengers : Integer)
 
-        CALL SUPER(pickupLocation,
-                   dropOffLocation,
-                   distance,
-                   route,
-                   ratePerKilometer)
+        CALL SUPER(pickupLocation,dropOffLocation,distance,route,ratePerKilometer)
 
 
         SET this.numberOfPassengers = numberOfPassengers
@@ -980,7 +961,7 @@ END CLASS
 CLASS Route
 
     ATTRIBUTES
-        waypoints : List<Waypoint>
+        waypoints : List(Waypoint)
 
 
     CONSTRUCTOR Route()
@@ -1032,34 +1013,17 @@ CALL route2.addWaypoint(point2)
 
 DECLARE ride1 : StandardRide
 
-SET ride1 = NEW StandardRide("Mall",
-                             "Airport",
-                             15,
-                             route1,
-                             2.5)
-
+SET ride1 = NEW StandardRide("Mall", "Airport",15, route1,2.5)
 
 
 DECLARE ride2 : PremiumRide
 
-SET ride2 = NEW PremiumRide("Hotel",
-                            "Station",
-                            20,
-                            route2,
-                            3.5,
-                            10)
-
+SET ride2 = NEW PremiumRide("Hotel","Station",20,route2,3.5,10)
 
 
 DECLARE ride3 : SharedRide
 
-SET ride3 = NEW SharedRide("University",
-                           "Downtown",
-                           18,
-                           route1,
-                           2.5,
-                           3)
-
+SET ride3 = NEW SharedRide("University","Downtown",18,route1,2.5,3)
 
 
 PRINT ride1.calculateFare()
