@@ -1,0 +1,190 @@
+Task 308: Insurance Claims Processing 
+
+CLASS Claim
+
+    ATTRIBUTES
+        claimNumber : String
+        dateFiled : String
+        status : String
+        documentationFolder : DocumentationFolder
+
+    CONSTRUCTOR Claim(claimNumber : String, dateFiled : String, status : String)
+
+        SET this.claimNumber = claimNumber
+        SET this.dateFiled = dateFiled
+        SET this.status = status
+        SET documentationFolder = NEW DocumentationFolder()
+
+    METHODS
+
+        calculatePayout() : Double
+
+            RETURN 0
+
+END CLASS
+
+
+CLASS VehicleClaim INHERITS Claim
+
+    ATTRIBUTES
+        repairEstimate : Double
+        excess : Double
+
+    CONSTRUCTOR VehicleClaim(claimNumber : String, dateFiled : String, status : String,
+                             repairEstimate : Double, excess : Double)
+
+        CALL SUPER(claimNumber, dateFiled, status)
+
+        SET this.repairEstimate = repairEstimate
+        SET this.excess = excess
+
+    OVERRIDE METHOD calculatePayout() : Double
+
+        RETURN repairEstimate - excess
+
+END CLASS
+
+
+CLASS MedicalClaim INHERITS Claim
+
+    ATTRIBUTES
+        treatmentCost : Double
+        medicalCoverageLimit : Double
+
+    CONSTRUCTOR MedicalClaim(claimNumber : String, dateFiled : String, status : String,
+                             treatmentCost : Double, medicalCoverageLimit : Double)
+
+        CALL SUPER(claimNumber, dateFiled, status)
+
+        SET this.treatmentCost = treatmentCost
+        SET this.medicalCoverageLimit = medicalCoverageLimit
+
+    OVERRIDE METHOD calculatePayout() : Double
+
+        IF treatmentCost > medicalCoverageLimit THEN
+
+            RETURN medicalCoverageLimit
+
+        ELSE
+
+            RETURN treatmentCost
+
+        END IF
+
+END CLASS
+
+
+CLASS PropertyClaim INHERITS Claim
+
+    ATTRIBUTES
+        damageValue : Double
+        maintenanceReduction : Double
+
+    CONSTRUCTOR PropertyClaim(claimNumber : String, dateFiled : String, status : String,
+                              damageValue : Double, maintenanceReduction : Double)
+
+        CALL SUPER(claimNumber, dateFiled, status)
+
+        SET this.damageValue = damageValue
+        SET this.maintenanceReduction = maintenanceReduction
+
+    OVERRIDE METHOD calculatePayout() : Double
+
+        RETURN damageValue - (damageValue * maintenanceReduction / 100)
+
+END CLASS
+
+
+CLASS DocumentationFolder
+
+    ATTRIBUTES
+        documents : List<String>
+
+    CONSTRUCTOR DocumentationFolder()
+
+        CREATE empty documents list
+
+END CLASS
+
+
+CLASS Policy
+
+    ATTRIBUTES
+        policyNumber : String
+        claims : List<Claim>
+
+    CONSTRUCTOR Policy(policyNumber : String)
+
+        SET this.policyNumber = policyNumber
+
+        CREATE empty claims list
+
+    METHODS
+
+        addClaim(claim : Claim)
+
+            ADD claim TO claims
+
+        processClaims()
+
+            SET i = 0
+
+            WHILE i < size of claims
+
+                PRINT claims[i].claimNumber
+                PRINT claims[i].calculatePayout()
+
+                SET i = i + 1
+
+            END WHILE
+
+END CLASS
+
+
+START PROGRAM
+
+DECLARE policy : Policy
+
+SET policy = NEW Policy("POL001")
+
+
+DECLARE vehicle : VehicleClaim
+
+SET vehicle = NEW VehicleClaim("VC001","10/05/2026","Pending",5000,500)
+
+
+DECLARE medical : MedicalClaim
+
+SET medical = NEW MedicalClaim("MC001","11/05/2026","Pending",8000,6000)
+
+
+DECLARE property : PropertyClaim
+
+SET property = NEW PropertyClaim("PC001","12/05/2026","Pending",12000,10)
+
+
+CALL policy.addClaim(vehicle)
+
+CALL policy.addClaim(medical)
+
+CALL policy.addClaim(property)
+
+
+PRINT "Vehicle Claim Payout = "
+
+PRINT vehicle.calculatePayout()
+
+
+PRINT "Medical Claim Payout = "
+
+PRINT medical.calculatePayout()
+
+
+PRINT "Property Claim Payout = "
+
+PRINT property.calculatePayout()
+
+
+CALL policy.processClaims()
+
+END PROGRAM
