@@ -404,3 +404,256 @@ PRINT journal.canRenewAfterOverdue()
 
 END PROGRAM 
 
+
+
+Task 310: Theme Park Ride Queues
+
+
+
+CLASS Ride
+
+    ATTRIBUTES
+        name : String
+        location : String
+        safetyLog : SafetyInspectionLog
+
+
+    CONSTRUCTOR Ride(name : String, location : String)
+
+        SET this.name = name
+        SET this.location = location
+
+        SET safetyLog = NEW SafetyInspectionLog()
+
+
+    METHODS
+
+        calculateWaitTime(numberOfPeople : Integer) : Double
+
+            RETURN 0
+
+END CLASS
+
+
+
+CLASS RollerCoaster INHERITS Ride
+
+    ATTRIBUTES
+        peoplePerTrainCar : Integer
+        rideCycleTime : Double
+
+
+    CONSTRUCTOR RollerCoaster(name : String, location : String,
+                              peoplePerTrainCar : Integer, rideCycleTime : Double)
+
+        CALL SUPER(name, location)
+
+        SET this.peoplePerTrainCar = peoplePerTrainCar
+        SET this.rideCycleTime = rideCycleTime
+
+
+    OVERRIDE METHOD calculateWaitTime(numberOfPeople : Integer) : Double
+
+        SET numberOfCars = numberOfPeople / peoplePerTrainCar
+
+        RETURN numberOfCars * rideCycleTime
+
+END CLASS
+
+
+
+CLASS WaterRide INHERITS Ride
+
+    ATTRIBUTES
+        peoplePerBoat : Integer
+        rideCycleTime : Double
+        loadingTime : Double
+
+
+    CONSTRUCTOR WaterRide(name : String, location : String,
+                          peoplePerBoat : Integer,
+                          rideCycleTime : Double,
+                          loadingTime : Double)
+
+        CALL SUPER(name, location)
+
+        SET this.peoplePerBoat = peoplePerBoat
+        SET this.rideCycleTime = rideCycleTime
+        SET this.loadingTime = loadingTime
+
+
+    OVERRIDE METHOD calculateWaitTime(numberOfPeople : Integer) : Double
+
+        SET numberOfBoats = numberOfPeople / peoplePerBoat
+
+        RETURN numberOfBoats * (rideCycleTime + loadingTime)
+
+END CLASS
+
+
+
+CLASS VIPAccessRide INHERITS RollerCoaster
+
+
+    CONSTRUCTOR VIPAccessRide(name : String, location : String,
+                              peoplePerTrainCar : Integer,
+                              rideCycleTime : Double)
+
+        CALL SUPER(name, location, peoplePerTrainCar, rideCycleTime)
+
+
+
+    METHOD calculateVIPWaitTime(numberOfPeople : Integer,
+                                hasVIPPass : Boolean) : Double
+
+
+        IF hasVIPPass = TRUE THEN
+
+            RETURN 0
+
+        ELSE
+
+            RETURN calculateWaitTime(numberOfPeople)
+
+        END IF
+
+
+END CLASS
+
+
+
+CLASS SafetyInspectionLog
+
+    ATTRIBUTES
+        inspectionDate : String
+        inspectionOutcome : String
+
+
+    CONSTRUCTOR SafetyInspectionLog()
+
+        SET inspectionDate = "Not Checked"
+
+        SET inspectionOutcome = "Unknown"
+
+
+
+    METHODS
+
+        updateInspection(date : String, outcome : String)
+
+            SET inspectionDate = date
+
+            SET inspectionOutcome = outcome
+
+
+END CLASS
+
+
+
+CLASS Park
+
+    ATTRIBUTES
+        rides : List<Ride>
+
+
+    CONSTRUCTOR Park()
+
+        CREATE empty rides list
+
+
+
+    METHODS
+
+
+        addRide(ride : Ride)
+
+            ADD ride TO rides
+
+
+
+        displayWaitTimes(numberOfPeople : Integer)
+
+            SET i = 0
+
+
+            WHILE i < size of rides
+
+
+                PRINT rides[i].name
+
+                PRINT rides[i].calculateWaitTime(numberOfPeople)
+
+
+                SET i = i + 1
+
+
+            END WHILE
+
+
+END CLASS
+
+
+
+START PROGRAM
+
+
+DECLARE park : Park
+
+SET park = NEW Park()
+
+
+
+DECLARE roller : RollerCoaster
+
+SET roller = NEW RollerCoaster("Thunder Mountain",
+                               "Zone A",
+                               20,
+                               5)
+
+
+
+DECLARE water : WaterRide
+
+SET water = NEW WaterRide("River Adventure",
+                          "Zone B",
+                          10,
+                          6,
+                          2)
+
+
+
+DECLARE vipRide : VIPAccessRide
+
+SET vipRide = NEW VIPAccessRide("VIP Rocket",
+                                "Zone C",
+                                20,
+                                5)
+
+
+
+CALL park.addRide(roller)
+
+CALL park.addRide(water)
+
+CALL park.addRide(vipRide)
+
+
+
+PRINT "Normal Guest Wait Times"
+
+
+CALL park.displayWaitTimes(100)
+
+
+
+PRINT "VIP Guest Wait Time"
+
+
+PRINT vipRide.calculateVIPWaitTime(100, TRUE)
+
+
+END PROGRAM
+
+
+
+
