@@ -443,8 +443,7 @@ CLASS RollerCoaster INHERITS Ride
         rideCycleTime : Double
 
 
-    CONSTRUCTOR RollerCoaster(name : String, location : String,
-                              peoplePerTrainCar : Integer, rideCycleTime : Double)
+    CONSTRUCTOR RollerCoaster(name : String, location : String,peoplePerTrainCar : Integer, rideCycleTime : Double)
 
         CALL SUPER(name, location)
 
@@ -470,10 +469,7 @@ CLASS WaterRide INHERITS Ride
         loadingTime : Double
 
 
-    CONSTRUCTOR WaterRide(name : String, location : String,
-                          peoplePerBoat : Integer,
-                          rideCycleTime : Double,
-                          loadingTime : Double)
+    CONSTRUCTOR WaterRide(name : String, location : String,peoplePerBoat : Integer,rideCycleTime : Double,loadingTime : Double)
 
         CALL SUPER(name, location)
 
@@ -503,8 +499,7 @@ CLASS VIPAccessRide INHERITS RollerCoaster
 
 
 
-    METHOD calculateVIPWaitTime(numberOfPeople : Integer,
-                                hasVIPPass : Boolean) : Double
+    METHOD calculateVIPWaitTime(numberOfPeople : Integer,hasVIPPass : Boolean) : Double
 
 
         IF hasVIPPass = TRUE THEN
@@ -553,7 +548,7 @@ END CLASS
 CLASS Park
 
     ATTRIBUTES
-        rides : List<Ride>
+        rides : List(Ride)
 
 
     CONSTRUCTOR Park()
@@ -605,30 +600,17 @@ SET park = NEW Park()
 
 DECLARE roller : RollerCoaster
 
-SET roller = NEW RollerCoaster("Thunder Mountain",
-                               "Zone A",
-                               20,
-                               5)
-
+SET roller = NEW RollerCoaster("Thunder Mountain","Zone A",20,5)
 
 
 DECLARE water : WaterRide
 
-SET water = NEW WaterRide("River Adventure",
-                          "Zone B",
-                          10,
-                          6,
-                          2)
-
+SET water = NEW WaterRide("River Adventure","Zone B",10,6,2)
 
 
 DECLARE vipRide : VIPAccessRide
 
-SET vipRide = NEW VIPAccessRide("VIP Rocket",
-                                "Zone C",
-                                20,
-                                5)
-
+SET vipRide = NEW VIPAccessRide("VIP Rocket","Zone C",20,5)
 
 
 CALL park.addRide(roller)
@@ -657,3 +639,4 @@ END PROGRAM
 
 
 
+	
