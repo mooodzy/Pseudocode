@@ -1,28 +1,23 @@
 Task 293: Shape Drawing App
-
-
-CLASS Shape
+CLASS Shape (ABSTRACT)
 
     ATTRIBUTES
         color : String
-        x : Integer
-        y : Integer
+        x : Double
+        y : Double
 
 
-    CONSTRUCTOR Shape(color : String,x : Integer,y : Integer)
+    CONSTRUCTOR Shape(color : String, x : Double, y : Double)
 
         SET this.color = color
         SET this.x = x
         SET this.y = y
 
 
-    METHODS
+    ABSTRACT METHOD calculateArea() : Double
 
-        calculateArea() : Double
+    ABSTRACT METHOD calculatePerimeter() : Double
 
-        calculatePerimeter() : Double
-
-            
 
 END CLASS
 
@@ -34,7 +29,7 @@ CLASS Circle INHERITS Shape
         radius : Double
 
 
-    CONSTRUCTOR Circle(color : String,x : Integer,y : Integer,radius : Double)
+    CONSTRUCTOR Circle(color : String, x : Double, y : Double, radius : Double)
 
         CALL SUPER(color, x, y)
 
@@ -50,6 +45,7 @@ CLASS Circle INHERITS Shape
 
         RETURN 2 * 3.14 * radius
 
+
 END CLASS
 
 
@@ -61,7 +57,7 @@ CLASS Rectangle INHERITS Shape
         height : Double
 
 
-    CONSTRUCTOR Rectangle(color : String,x : Integer,y : Integer,width : Double,height : Double)
+    CONSTRUCTOR Rectangle(color : String, x : Double, y : Double, width : Double, height : Double)
 
         CALL SUPER(color, x, y)
 
@@ -78,6 +74,7 @@ CLASS Rectangle INHERITS Shape
 
         RETURN 2 * (width + height)
 
+
 END CLASS
 
 
@@ -90,7 +87,7 @@ CLASS Triangle INHERITS Shape
         side3 : Double
 
 
-    CONSTRUCTOR Triangle(color : String,x : Integer,y : Integer,side1 : Double,side2 : Double,side3 : Double)
+    CONSTRUCTOR Triangle(color : String, x : Double, y : Double, side1 : Double, side2 : Double, side3 : Double)
 
         CALL SUPER(color, x, y)
 
@@ -110,7 +107,9 @@ CLASS Triangle INHERITS Shape
 
         RETURN side1 + side2 + side3
 
+
 END CLASS
+
 
 
 CLASS Canvas
@@ -124,70 +123,85 @@ CLASS Canvas
         CREATE empty shapes list
 
 
-    METHODS
+    METHOD addShape(shape : Shape)
 
-        addShape(shape : Shape)
-
-            ADD shape TO shapes
+        ADD shape TO shapes
 
 
 
-        displayShapes()
+    METHOD displayShapes()
 
-            SET i = 0
+        SET i = 0
 
-            WHILE i < size of shapes
+        WHILE i < size of shapes
 
-                PRINT shapes[i].color
+            PRINT "Color: " + shapes[i].color
 
-                PRINT shapes[i].calculateArea()
+            PRINT "Area: " + shapes[i].calculateArea()
 
-                PRINT shapes[i].calculatePerimeter()
+            PRINT "Perimeter: " + shapes[i].calculatePerimeter()
 
-                SET i = i + 1
+            SET i = i + 1
 
-            END WHILE
+        END WHILE
+
 
 END CLASS
 
 
+
 START PROGRAM
+
 
 DECLARE canvas : Canvas
 
 SET canvas = NEW Canvas()
 
 
+
 DECLARE circle : Circle
 
-SET circle = NEW Circle("Red",10,20,5)
+SET circle = NEW Circle("Red", 10, 20, 5)
 
 
 
 DECLARE rectangle : Rectangle
 
-SET rectangle = NEW Rectangle("Blue", 30,40,8,4)
+SET rectangle = NEW Rectangle("Blue", 30, 40, 8, 4)
+
 
 
 DECLARE triangle : Triangle
 
-SET triangle = NEW Triangle("Green",50,60, 3, 4, 5)
+SET triangle = NEW Triangle("Green", 50, 60, 3, 4, 5)
+
+
+
 CALL canvas.addShape(circle)
+
 CALL canvas.addShape(rectangle)
+
 CALL canvas.addShape(triangle)
 
 
 
 PRINT "Circle Area = "
+
 PRINT circle.calculateArea()
 
 
+
 PRINT "Rectangle Area = "
+
 PRINT rectangle.calculateArea()
 
 
+
 PRINT "Triangle Perimeter = "
+
 PRINT triangle.calculatePerimeter()
+
+
 
 CALL canvas.displayShapes()
 
