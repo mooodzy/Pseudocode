@@ -595,7 +595,7 @@ CALL enclosure1.displayAnimals()
 END PROGRAMTask 306: Utility Billing System
 
 
-CLASS Bill
+CLASS Bill (ABSTRACT)
 
     ATTRIBUTES
         billingPeriod : String
@@ -603,18 +603,24 @@ CLASS Bill
         meterReading : MeterReading
 
 
-    CONSTRUCTOR Bill(billingPeriod : String,dueDate : String,meterReading : MeterReading)
+    CONSTRUCTOR Bill(billingPeriod : String, dueDate : String, meterReading : MeterReading)
 
         SET this.billingPeriod = billingPeriod
+
         SET this.dueDate = dueDate
+
         SET this.meterReading = meterReading
 
 
-    METHODS
 
-        calculateAmountOwed() : Double
+    METHOD getBillingPeriod() : String
 
-            RETURN 0.0
+        RETURN billingPeriod
+
+
+
+    ABSTRACT METHOD calculateAmountOwed() : Double
+
 
 END CLASS
 
@@ -623,21 +629,21 @@ END CLASS
 CLASS ElectricityBill INHERITS Bill
 
     ATTRIBUTES
-        unitsConsumed : Double
         ratePerUnit : Double
 
 
-    CONSTRUCTOR ElectricityBill(billingPeriod : String,dueDate : String,meterReading : MeterReading,unitsConsumed : Double,ratePerUnit : Double)
+    CONSTRUCTOR ElectricityBill(billingPeriod : String, dueDate : String, meterReading : MeterReading, ratePerUnit : Double)
 
         CALL SUPER(billingPeriod, dueDate, meterReading)
 
-        SET this.unitsConsumed = unitsConsumed
         SET this.ratePerUnit = ratePerUnit
+
 
 
     OVERRIDE METHOD calculateAmountOwed() : Double
 
-        RETURN unitsConsumed * ratePerUnit
+        RETURN meterReading.getConsumption() * ratePerUnit
+
 
 END CLASS
 
@@ -646,23 +652,24 @@ END CLASS
 CLASS WaterBill INHERITS Bill
 
     ATTRIBUTES
-        litersConsumed : Double
         flatRate : Double
         standingCharge : Double
 
 
-    CONSTRUCTOR WaterBill(billingPeriod : String,dueDate : String,meterReading : MeterReading,litersConsumed : Double,flatRate : Double,standingCharge : Double)
+    CONSTRUCTOR WaterBill(billingPeriod : String, dueDate : String, meterReading : MeterReading, flatRate : Double, standingCharge : Double)
 
         CALL SUPER(billingPeriod, dueDate, meterReading)
 
-        SET this.litersConsumed = litersConsumed
         SET this.flatRate = flatRate
+
         SET this.standingCharge = standingCharge
+
 
 
     OVERRIDE METHOD calculateAmountOwed() : Double
 
-        RETURN (litersConsumed * flatRate) + standingCharge
+        RETURN (meterReading.getConsumption() * flatRate) + standingCharge
+
 
 END CLASS
 
@@ -671,23 +678,39 @@ END CLASS
 CLASS GasBill INHERITS Bill
 
     ATTRIBUTES
-        unitsConsumed : Double
         ratePerUnit : Double
         seasonalSurcharge : Double
+        month : String
 
 
-    CONSTRUCTOR GasBill(billingPeriod : String,dueDate : String, meterReading : MeterReading,unitsConsumed : Double,ratePerUnit : Double,seasonalSurcharge : Double)
+    CONSTRUCTOR GasBill(billingPeriod : String, dueDate : String, meterReading : MeterReading, ratePerUnit : Double, seasonalSurcharge : Double, month : String)
 
         CALL SUPER(billingPeriod, dueDate, meterReading)
 
-        SET this.unitsConsumed = unitsConsumed
         SET this.ratePerUnit = ratePerUnit
+
         SET this.seasonalSurcharge = seasonalSurcharge
+
+        SET this.month = month
+
 
 
     OVERRIDE METHOD calculateAmountOwed() : Double
 
-        RETURN (unitsConsumed * ratePerUnit) + seasonalSurcharge
+        DECLARE amount : Double
+
+        SET amount = meterReading.getConsumption() * ratePerUnit
+
+
+        IF month = "December" OR month = "January" OR month = "February" THEN
+
+            SET amount = amount + seasonalSurcharge
+
+        END IF
+
+
+        RETURN amount
+
 
 END CLASS
 
@@ -700,10 +723,18 @@ CLASS MeterReading
         endReading : Double
 
 
-    CONSTRUCTOR MeterReading(startReading : Double,endReading : Double)
+    CONSTRUCTOR MeterReading(startReading : Double, endReading : Double)
 
         SET this.startReading = startReading
+
         SET this.endReading = endReading
+
+
+
+    METHOD getConsumption() : Double
+
+        RETURN endReading - startReading
+
 
 END CLASS
 
@@ -714,51 +745,86 @@ CLASS CustomerAccount
     ATTRIBUTES
         bills : List<Bill>
 
+
     CONSTRUCTOR CustomerAccount()
 
         CREATE empty bills list
 
 
-    METHODS
 
-        addBill(bill : Bill)
+    METHOD addBill(bill : Bill)
 
-            ADD bill TO bills
+        ADD bill TO bills
 
 
-        displayBills()
 
-            SET i = 0
+    METHOD displayBills()
 
-            WHILE i < size of bills
+        FOR EACH bill IN bills
 
-                PRINT bills[i].billingPeriod
+            PRINT "Billing Period: " + bill.getBillingPeriod()
 
-                PRINT bills[i].calculateAmountOwed()
+            PRINT "Amount Owed: " + bill.calculateAmountOwed()
 
-                SET i = i + 1
 
-            END WHILE
+        END FOR
+
 
 END CLASS
 
 
+
 START PROGRAM
+
 
 DECLARE reading1 : MeterReading
 
 SET reading1 = NEW MeterReading(1000, 1200)
 
+
+
 DECLARE electricityBill1 : ElectricityBill
 
-SET electricityBill1 = NEW ElectricityBill("July 2026","31-07-2026",reading1,200,0.25)
+SET electricityBill1 = NEW ElectricityBill("July 2026", "31-07-2026", reading1, 0.25)
+
+
+
+DECLARE waterReading : MeterReading
+
+SET waterReading = NEW MeterReading(5000, 5500)
+
+
+
+DECLARE waterBill1 : WaterBill
+
+SET waterBill1 = NEW WaterBill("July 2026", "31-07-2026", waterReading, 0.05, 10)
+
+
+
+DECLARE gasReading : MeterReading
+
+SET gasReading = NEW MeterReading(2000, 2300)
+
+
+
+DECLARE gasBill1 : GasBill
+
+SET gasBill1 = NEW GasBill("January 2026", "31-01-2026", gasReading, 0.30, 50, "January")
+
+
 
 DECLARE account1 : CustomerAccount
 
 SET account1 = NEW CustomerAccount()
 
 
+
 CALL account1.addBill(electricityBill1)
+
+CALL account1.addBill(waterBill1)
+
+CALL account1.addBill(gasBill1)
+
 
 
 CALL account1.displayBills()
