@@ -1052,11 +1052,7 @@ END PROGRAM
 
 
 
-Task 312: Data Center Server Management (Medium)
-
-
-
-CLASS Server (ABSTRACT)
+Task 312: ABSTRACT CLASS Server
 
     ATTRIBUTES
         serialNumber : String
@@ -1064,7 +1060,7 @@ CLASS Server (ABSTRACT)
         hardware : HardwareSpecification
 
 
-    CONSTRUCTOR Server(serialNumber : String,uptime : Double,hardware : HardwareSpecification)
+    CONSTRUCTOR Server(serialNumber : String, uptime : Double, hardware : HardwareSpecification)
 
         SET this.serialNumber = serialNumber
 
@@ -1087,16 +1083,24 @@ END CLASS
 
 
 
+
+
 CLASS WebServer INHERITS Server
 
+
     ATTRIBUTES
+
         activeConnections : Integer
+
         maxConnections : Integer
 
 
-    CONSTRUCTOR WebServer(serialNumber : String,uptime : Double,hardware : HardwareSpecification,activeConnections : Integer,maxConnections : Integer)
+
+    CONSTRUCTOR WebServer(serialNumber : String, uptime : Double, hardware : HardwareSpecification, activeConnections : Integer, maxConnections : Integer)
+
 
         CALL SUPER(serialNumber, uptime, hardware)
+
 
         SET this.activeConnections = activeConnections
 
@@ -1104,25 +1108,37 @@ CLASS WebServer INHERITS Server
 
 
 
+
     OVERRIDE METHOD calculateLoadPercentage() : Double
 
-        RETURN (activeConnections / maxConnections) * 100
+
+        RETURN (activeConnections * 100.0) / maxConnections
+
 
 
 END CLASS
 
 
 
+
+
 CLASS DatabaseServer INHERITS Server
 
+
     ATTRIBUTES
+
         currentQueries : Integer
+
         maxQueriesPerSecond : Integer
 
 
-    CONSTRUCTOR DatabaseServer(serialNumber : String,uptime : Double,hardware : HardwareSpecification,currentQueries : Integer,maxQueriesPerSecond : Integer)
+
+
+    CONSTRUCTOR DatabaseServer(serialNumber : String, uptime : Double, hardware : HardwareSpecification, currentQueries : Integer, maxQueriesPerSecond : Integer)
+
 
         CALL SUPER(serialNumber, uptime, hardware)
+
 
         SET this.currentQueries = currentQueries
 
@@ -1130,75 +1146,118 @@ CLASS DatabaseServer INHERITS Server
 
 
 
+
+
     METHOD acceptConnection() : Boolean
+
 
         IF currentQueries >= maxQueriesPerSecond THEN
 
+
             PRINT "Server is at full capacity"
+
 
             RETURN FALSE
 
+
         ELSE
+
 
             SET currentQueries = currentQueries + 1
 
+
+            PRINT "Connection accepted"
+
+
             RETURN TRUE
+
 
         END IF
 
 
 
+
+
+    METHOD closeConnection()
+
+
+        IF currentQueries > 0 THEN
+
+            SET currentQueries = currentQueries - 1
+
+        END IF
+
+
+
+
     OVERRIDE METHOD calculateLoadPercentage() : Double
 
-        RETURN (currentQueries / maxQueriesPerSecond) * 100
+
+        RETURN (currentQueries * 100.0) / maxQueriesPerSecond
+
 
 
 END CLASS
 
 
 
+
+
 CLASS CacheServer INHERITS DatabaseServer
 
+
     ATTRIBUTES
+
         cacheHitRatio : Double
 
 
-    CONSTRUCTOR CacheServer(serialNumber : String,uptime : Double,hardware : HardwareSpecification,currentQueries : Integer,maxQueriesPerSecond : Integer,cacheHitRatio : Double)
 
-        CALL SUPER(serialNumber,uptime,hardware,currentQueries,maxQueriesPerSecond)
+
+
+    CONSTRUCTOR CacheServer(serialNumber : String, uptime : Double, hardware : HardwareSpecification, currentQueries : Integer, maxQueriesPerSecond : Integer, cacheHitRatio : Double)
+
+
+        CALL SUPER(serialNumber, uptime, hardware, currentQueries, maxQueriesPerSecond)
 
 
         SET this.cacheHitRatio = cacheHitRatio
 
 
 
-    OVERRIDE METHOD calculateLoadPercentage() : Double
 
-        DECLARE load : Double
+
+    OVERRIDE METHOD calculateLoadPercentage() : Double
 
 
         SET load = SUPER.calculateLoadPercentage()
 
 
-        SET load = load * (1 - cacheHitRatio)
+        RETURN load * (1 - cacheHitRatio)
 
-
-        RETURN load
 
 
 END CLASS
 
 
 
+
+
 CLASS HardwareSpecification
 
+
     ATTRIBUTES
+
         cpu : String
+
         ram : Double
+
         storage : Double
 
 
-    CONSTRUCTOR HardwareSpecification(cpu : String,ram : Double,storage : Double)
+
+
+    CONSTRUCTOR HardwareSpecification(cpu : String, ram : Double, storage : Double)
+
 
         SET this.cpu = cpu
 
@@ -1207,73 +1266,114 @@ CLASS HardwareSpecification
         SET this.storage = storage
 
 
+
 END CLASS
+
+
 
 
 
 CLASS Rack
 
+
     ATTRIBUTES
+
         servers : List<Server>
 
 
+
+
+
     CONSTRUCTOR Rack()
+
 
         CREATE empty servers list
 
 
 
+
+
     METHOD addServer(server : Server)
+
 
         ADD server TO servers
 
 
 
+
+
     METHOD displayServers()
+
 
         FOR EACH server IN servers
 
+
             PRINT "Server Serial: " + server.getSerialNumber()
 
-            PRINT "Load: " + server.calculateLoadPercentage()
+
+            PRINT "Load Percentage: " + server.calculateLoadPercentage() + "%"
+
+
+            PRINT "---------------------"
+
 
 
         END FOR
 
 
+
 END CLASS
+
+
 
 
 
 START PROGRAM
 
 
+
 DECLARE hardware1 : HardwareSpecification
 
-SET hardware1 = NEW HardwareSpecification("Intel Xeon",64, 2000)
+
+SET hardware1 = NEW HardwareSpecification("Intel Xeon",64,2000)
+
+
 
 
 
 DECLARE webServer1 : WebServer
 
-SET webServer1 = NEW WebServer( "WEB001",500,hardware1,300,1000)
+
+SET webServer1 = NEW WebServer("WEB001",500,hardware1,300,1000)
+
+
+
 
 
 DECLARE databaseServer1 : DatabaseServer
 
-SET databaseServer1 = NEW DatabaseServer("DB001", 800,hardware1,700,1000)
+
+SET databaseServer1 = NEW DatabaseServer("DB001",800,hardware1,700,1000)
+
+
 
 
 
 DECLARE cacheServer1 : CacheServer
 
-SET cacheServer1 = NEW CacheServer( "CACHE001",900,hardware1,600,1000,0.80)
+
+SET cacheServer1 = NEW CacheServer("CACHE001",900,hardware1,600,1000,0.80)
+
+
 
 
 
 DECLARE rack1 : Rack
 
+
 SET rack1 = NEW Rack()
+
+
 
 
 
@@ -1285,13 +1385,25 @@ CALL rack1.addServer(cacheServer1)
 
 
 
+
+
+PRINT "Current Server Loads"
+
+
 CALL rack1.displayServers()
 
+
+
+
+
+PRINT "Testing Database Connection"
 
 
 CALL databaseServer1.acceptConnection()
 
 
-END PROGRAM
+CALL databaseServer1.closeConnection()
 
-	
+
+
+END PROGRAM
