@@ -431,7 +431,7 @@ Task 310: Theme Park Ride Queues
 
 
 
-CLASS Ride
+ABSTRACT CLASS Ride
 
     ATTRIBUTES
         name : String
@@ -447,10 +447,9 @@ CLASS Ride
         SET safetyLog = NEW SafetyInspectionLog()
 
 
-    METHODS
 
-        calculateWaitTime(numberOfPeople : Integer) 
-            RETURN 0
+    ABSTRACT METHOD calculateWaitTime(numberOfPeople : Integer) : Double
+
 
 END CLASS
 
@@ -463,19 +462,25 @@ CLASS RollerCoaster INHERITS Ride
         rideCycleTime : Double
 
 
-    CONSTRUCTOR RollerCoaster(name : String, location : String,peoplePerTrainCar : Integer, rideCycleTime : Double)
+
+    CONSTRUCTOR RollerCoaster(name : String, location : String, peoplePerTrainCar : Integer, rideCycleTime : Double)
 
         CALL SUPER(name, location)
 
         SET this.peoplePerTrainCar = peoplePerTrainCar
+
         SET this.rideCycleTime = rideCycleTime
+
 
 
     OVERRIDE METHOD calculateWaitTime(numberOfPeople : Integer) : Double
 
-        SET numberOfCars = numberOfPeople / peoplePerTrainCar
+
+        SET numberOfCars = CEILING(numberOfPeople / peoplePerTrainCar)
+
 
         RETURN numberOfCars * rideCycleTime
+
 
 END CLASS
 
@@ -484,25 +489,35 @@ END CLASS
 CLASS WaterRide INHERITS Ride
 
     ATTRIBUTES
+
         peoplePerBoat : Integer
+
         rideCycleTime : Double
+
         loadingTime : Double
 
 
-    CONSTRUCTOR WaterRide(name : String, location : String,peoplePerBoat : Integer,rideCycleTime : Double,loadingTime : Double)
+
+    CONSTRUCTOR WaterRide(name : String, location : String, peoplePerBoat : Integer, rideCycleTime : Double, loadingTime : Double)
 
         CALL SUPER(name, location)
 
         SET this.peoplePerBoat = peoplePerBoat
+
         SET this.rideCycleTime = rideCycleTime
+
         SET this.loadingTime = loadingTime
+
 
 
     OVERRIDE METHOD calculateWaitTime(numberOfPeople : Integer) : Double
 
-        SET numberOfBoats = numberOfPeople / peoplePerBoat
+
+        SET numberOfBoats = CEILING(numberOfPeople / peoplePerBoat)
+
 
         RETURN numberOfBoats * (rideCycleTime + loadingTime)
+
 
 END CLASS
 
@@ -511,24 +526,27 @@ END CLASS
 CLASS VIPAccessRide INHERITS RollerCoaster
 
 
-    CONSTRUCTOR VIPAccessRide(name : String, location : String,
-                              peoplePerTrainCar : Integer,
-                              rideCycleTime : Double)
+
+    CONSTRUCTOR VIPAccessRide(name : String, location : String, peoplePerTrainCar : Integer, rideCycleTime : Double)
 
         CALL SUPER(name, location, peoplePerTrainCar, rideCycleTime)
 
 
 
-    METHOD calculateVIPWaitTime(numberOfPeople : Integer,hasVIPPass : Boolean) : Double
+    METHOD calculateVIPWaitTime(numberOfPeople : Integer, hasVIPPass : Boolean) : Double
 
 
         IF hasVIPPass = TRUE THEN
 
-            RETURN 0
+
+            RETURN rideCycleTime
+
 
         ELSE
 
+
             RETURN calculateWaitTime(numberOfPeople)
+
 
         END IF
 
@@ -539,12 +557,17 @@ END CLASS
 
 CLASS SafetyInspectionLog
 
+
     ATTRIBUTES
+
         inspectionDate : String
+
         inspectionOutcome : String
 
 
+
     CONSTRUCTOR SafetyInspectionLog()
+
 
         SET inspectionDate = "Not Checked"
 
@@ -552,64 +575,73 @@ CLASS SafetyInspectionLog
 
 
 
-    METHODS
+    METHOD updateInspection(date : String, outcome : String)
 
-        updateInspection(date : String, outcome : String)
 
-            SET inspectionDate = date
+        SET inspectionDate = date
 
-            SET inspectionOutcome = outcome
+        SET inspectionOutcome = outcome
 
 
 END CLASS
+
 
 
 
 CLASS Park
 
+
     ATTRIBUTES
+
         rides : List(Ride)
 
 
+
     CONSTRUCTOR Park()
+
 
         CREATE empty rides list
 
 
 
-    METHODS
+    METHOD addRide(ride : Ride)
 
 
-        addRide(ride : Ride)
-
-            ADD ride TO rides
+        ADD ride TO rides
 
 
 
-        displayWaitTimes(numberOfPeople : Integer)
-
-            SET i = 0
+    METHOD displayWaitTimes(numberOfPeople : Integer)
 
 
-            WHILE i < size of rides
+        SET i = 0
 
 
-                PRINT rides[i].name
-
-                PRINT rides[i].calculateWaitTime(numberOfPeople)
+        WHILE i < size of rides
 
 
-                SET i = i + 1
+            PRINT "Ride: " + rides[i].name
+
+            PRINT "Wait Time: " + rides[i].calculateWaitTime(numberOfPeople)
+
+            PRINT "----------------"
 
 
-            END WHILE
+
+            SET i = i + 1
+
+
+        END WHILE
 
 
 END CLASS
 
 
 
+
+
 START PROGRAM
+
 
 
 DECLARE park : Park
@@ -623,14 +655,17 @@ DECLARE roller : RollerCoaster
 SET roller = NEW RollerCoaster("Thunder Mountain","Zone A",20,5)
 
 
+
 DECLARE water : WaterRide
 
 SET water = NEW WaterRide("River Adventure","Zone B",10,6,2)
 
 
+
 DECLARE vipRide : VIPAccessRide
 
 SET vipRide = NEW VIPAccessRide("VIP Rocket","Zone C",20,5)
+
 
 
 CALL park.addRide(roller)
@@ -654,9 +689,8 @@ PRINT "VIP Guest Wait Time"
 PRINT vipRide.calculateVIPWaitTime(100, TRUE)
 
 
+
 END PROGRAM
-
-
 
 
 Task 311: Freelancer Invoicing Platform (Medium) 
