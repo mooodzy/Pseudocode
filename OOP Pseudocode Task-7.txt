@@ -200,8 +200,7 @@ END PROGRAM
 
 Task 309: University Library Loans (Medium)
 
-
-CLASS LoanItem
+ABSTRACT CLASS LoanItem
 
     ATTRIBUTES
         title : String
@@ -219,16 +218,13 @@ CLASS LoanItem
         SET conditionReport = NEW ConditionReport()
 
 
-    METHODS
-
-        calculateLateFee(daysOverdue : Integer) : Double
-
-            RETURN 0
+    ABSTRACT METHOD calculateLateFee(daysOverdue : Integer) : Double
 
 
-        renewLoan() : Boolean
+    METHOD renewLoan() : Boolean
 
-            RETURN TRUE
+        RETURN TRUE
+
 
 END CLASS
 
@@ -250,6 +246,7 @@ CLASS StandardBook INHERITS LoanItem
     OVERRIDE METHOD calculateLateFee(daysOverdue : Integer) : Double
 
         RETURN daysOverdue * dailyLateFee
+
 
 END CLASS
 
@@ -277,6 +274,7 @@ CLASS ReferenceTextbook INHERITS LoanItem
 
         RETURN FALSE
 
+
 END CLASS
 
 
@@ -289,14 +287,19 @@ CLASS JournalIssue INHERITS ReferenceTextbook
         CALL SUPER(title, barcode, loanDuration)
 
 
-    OVERRIDE METHOD renewLoan() : Boolean
 
-        RETURN FALSE
+    METHOD canRenewAfterOverdue(isOverdue : Boolean) : Boolean
 
+        IF isOverdue = TRUE THEN
 
-    METHOD canRenewAfterOverdue() : Boolean
+            RETURN FALSE
 
-        RETURN FALSE
+        ELSE
+
+            RETURN TRUE
+
+        END IF
+
 
 END CLASS
 
@@ -305,6 +308,7 @@ END CLASS
 CLASS ConditionReport
 
     ATTRIBUTES
+
         damageNotes : String
 
 
@@ -313,11 +317,11 @@ CLASS ConditionReport
         SET damageNotes = "No damage"
 
 
-    METHODS
 
-        addDamageNote(note : String)
+    METHOD addDamageNote(note : String)
 
-            SET damageNotes = note
+        SET damageNotes = note
+
 
 END CLASS
 
@@ -326,8 +330,11 @@ END CLASS
 CLASS StudentAccount
 
     ATTRIBUTES
+
         studentName : String
+
         loanItems : List<LoanItem>
+
 
 
     CONSTRUCTOR StudentAccount(studentName : String)
@@ -337,31 +344,36 @@ CLASS StudentAccount
         CREATE empty loanItems list
 
 
-    METHODS
 
+    METHOD addLoanItem(item : LoanItem)
 
-        addLoanItem(item : LoanItem)
-
-            ADD item TO loanItems
+        ADD item TO loanItems
 
 
 
-        calculateAllLateFees(daysOverdue : Integer)
+    METHOD calculateAllLateFees(daysOverdue : Integer)
 
-            SET i = 0
+        SET i = 0
 
-            WHILE i < size of loanItems
 
-                PRINT loanItems[i].title
+        WHILE i < size of loanItems
 
-                PRINT loanItems[i].calculateLateFee(daysOverdue)
 
-                SET i = i + 1
+            PRINT "Title: " + loanItems[i].title
 
-            END WHILE
+            PRINT "Late Fee: " + loanItems[i].calculateLateFee(daysOverdue)
+
+            PRINT "---------------------"
+
+
+            SET i = i + 1
+
+
+        END WHILE
 
 
 END CLASS
+
 
 
 
@@ -402,17 +414,16 @@ CALL account.addLoanItem(journal)
 
 PRINT "Late Fees After 5 Days:"
 
-
 CALL account.calculateAllLateFees(5)
 
 
 
-PRINT "Can Journal Renew?"
+PRINT "Can Journal Renew After Overdue?"
 
-PRINT journal.canRenewAfterOverdue()
+PRINT journal.canRenewAfterOverdue(TRUE)
 
 
-END PROGRAM 
+END PROGRAM
 
 
 
