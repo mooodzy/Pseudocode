@@ -696,7 +696,7 @@ END PROGRAM
 Task 311: Freelancer Invoicing Platform (Medium) 
 
 
-CLASS Invoice (ABSTRACT)
+ABSTRACT CLASS Invoice
 
     ATTRIBUTES
         invoiceNumber : String
@@ -705,22 +705,17 @@ CLASS Invoice (ABSTRACT)
         paymentTerms : PaymentTerms
 
 
-    CONSTRUCTOR Invoice(invoiceNumber : String,dateIssued : String,clientName : String,paymentTerms : PaymentTerms)
+    CONSTRUCTOR Invoice(invoiceNumber : String, dateIssued : String, clientName : String, paymentTerms : PaymentTerms)
 
         SET this.invoiceNumber = invoiceNumber
-
         SET this.dateIssued = dateIssued
-
         SET this.clientName = clientName
-
         SET this.paymentTerms = paymentTerms
-
 
 
     METHOD getInvoiceNumber() : String
 
         RETURN invoiceNumber
-
 
 
     ABSTRACT METHOD calculateTotalAmount() : Double
@@ -730,13 +725,14 @@ END CLASS
 
 
 
+
 CLASS FixedPriceInvoice INHERITS Invoice
 
     ATTRIBUTES
         projectFee : Double
 
 
-    CONSTRUCTOR FixedPriceInvoice(invoiceNumber : String,dateIssued : String,clientName : String,paymentTerms : PaymentTerms,projectFee : Double)
+    CONSTRUCTOR FixedPriceInvoice(invoiceNumber : String, dateIssued : String, clientName : String, paymentTerms : PaymentTerms, projectFee : Double)
 
         CALL SUPER(invoiceNumber, dateIssued, clientName, paymentTerms)
 
@@ -753,6 +749,7 @@ END CLASS
 
 
 
+
 CLASS HourEntry
 
     ATTRIBUTES
@@ -761,7 +758,8 @@ CLASS HourEntry
         approved : Boolean
 
 
-    CONSTRUCTOR HourEntry(hours : Double,hourlyRate : Double, approved : Boolean)
+
+    CONSTRUCTOR HourEntry(hours : Double, hourlyRate : Double, approved : Boolean)
 
         SET this.hours = hours
 
@@ -770,18 +768,21 @@ CLASS HourEntry
         SET this.approved = approved
 
 
-
 END CLASS
+
 
 
 
 CLASS HourlyInvoice INHERITS Invoice
 
+
     ATTRIBUTES
+
         hourEntries : List(HourEntry)
 
 
-    CONSTRUCTOR HourlyInvoice(invoiceNumber : String, dateIssued : String, clientName : String,paymentTerms : PaymentTerms)
+
+    CONSTRUCTOR HourlyInvoice(invoiceNumber : String, dateIssued : String, clientName : String, paymentTerms : PaymentTerms)
 
         CALL SUPER(invoiceNumber, dateIssued, clientName, paymentTerms)
 
@@ -797,12 +798,11 @@ CLASS HourlyInvoice INHERITS Invoice
 
     OVERRIDE METHOD calculateTotalAmount() : Double
 
-        DECLARE total : Double
-
         SET total = 0
 
 
         FOR EACH entry IN hourEntries
+
 
             IF entry.approved = TRUE THEN
 
@@ -821,37 +821,47 @@ END CLASS
 
 
 
+
 CLASS RetainerInvoice INHERITS FixedPriceInvoice
 
+
     ATTRIBUTES
+
         includedHours : Double
-        extraHours : Double
+
+        totalHours : Double
+
         extraHourlyRate : Double
 
 
-    CONSTRUCTOR RetainerInvoice(invoiceNumber : String,dateIssued : String,clientName : String,paymentTerms : PaymentTerms,projectFee : Double,includedHours : Double,extraHours : Double,extraHourlyRate : Double)
 
-        CALL SUPER(invoiceNumber,dateIssued,clientName,paymentTerms,projectFee)
+    CONSTRUCTOR RetainerInvoice(invoiceNumber : String, dateIssued : String, clientName : String, paymentTerms : PaymentTerms, projectFee : Double, includedHours : Double, totalHours : Double, extraHourlyRate : Double)
+
+
+        CALL SUPER(invoiceNumber, dateIssued, clientName, paymentTerms, projectFee)
 
 
         SET this.includedHours = includedHours
 
-        SET this.extraHours = extraHours
+        SET this.totalHours = totalHours
 
         SET this.extraHourlyRate = extraHourlyRate
 
 
 
+
     OVERRIDE METHOD calculateTotalAmount() : Double
 
-        DECLARE total : Double
 
         SET total = SUPER.calculateTotalAmount()
 
 
-        IF extraHours > includedHours THEN
+        IF totalHours > includedHours THEN
 
-            SET total = total + ((extraHours - includedHours) * extraHourlyRate)
+            SET extraHours = totalHours - includedHours
+
+            SET total = total + (extraHours * extraHourlyRate)
+
 
         END IF
 
@@ -863,49 +873,74 @@ END CLASS
 
 
 
+
 CLASS PaymentTerms
 
+
     ATTRIBUTES
+
         dueDate : String
+
         lateInterestRate : Double
 
 
-    CONSTRUCTOR PaymentTerms(dueDate : String,lateInterestRate : Double)
+
+    CONSTRUCTOR PaymentTerms(dueDate : String, lateInterestRate : Double)
+
 
         SET this.dueDate = dueDate
 
         SET this.lateInterestRate = lateInterestRate
 
 
+
+    METHOD calculateLateFee(amount : Double, daysLate : Integer) : Double
+
+
+        RETURN amount * (lateInterestRate / 100) * daysLate
+
+
 END CLASS
+
 
 
 
 CLASS FreelancerAccount
 
+
     ATTRIBUTES
+
         invoices : List<Invoice>
 
 
+
     CONSTRUCTOR FreelancerAccount()
+
 
         CREATE empty invoices list
 
 
 
+
     METHOD addInvoice(invoice : Invoice)
+
 
         ADD invoice TO invoices
 
 
 
+
     METHOD displayInvoices()
 
+
         FOR EACH invoice IN invoices
+
 
             PRINT "Invoice Number: " + invoice.getInvoiceNumber()
 
             PRINT "Total Amount: " + invoice.calculateTotalAmount()
+
+            PRINT "---------------------"
 
 
         END FOR
@@ -915,33 +950,53 @@ END CLASS
 
 
 
+
 START PROGRAM
+
 
 
 DECLARE terms1 : PaymentTerms
 
-SET terms1 = NEW PaymentTerms("30-07-2026", 5)
+SET terms1 = NEW PaymentTerms("30-07-2026",5)
+
 
 
 
 DECLARE fixedInvoice1 : FixedPriceInvoice
 
-SET fixedInvoice1 = NEW FixedPriceInvoice("INV001","01-07-2026","ABC Company",terms1,5000)
+SET fixedInvoice1 = NEW FixedPriceInvoice(
+"INV001",
+"01-07-2026",
+"ABC Company",
+terms1,
+5000
+)
+
+
 
 
 DECLARE hourlyInvoice1 : HourlyInvoice
 
-SET hourlyInvoice1 = NEW HourlyInvoice("INV002","02-07-2026","XYZ Company",terms1)
+SET hourlyInvoice1 = NEW HourlyInvoice(
+"INV002",
+"02-07-2026",
+"XYZ Company",
+terms1
+)
+
+
 
 
 DECLARE entry1 : HourEntry
 
-SET entry1 = NEW HourEntry(10, 50, TRUE)
+SET entry1 = NEW HourEntry(10,50,TRUE)
+
 
 
 DECLARE entry2 : HourEntry
 
-SET entry2 = NEW HourEntry(5, 50, FALSE)
+SET entry2 = NEW HourEntry(5,50,FALSE)
+
 
 
 CALL hourlyInvoice1.addHourEntry(entry1)
@@ -950,14 +1005,31 @@ CALL hourlyInvoice1.addHourEntry(entry2)
 
 
 
+
+
 DECLARE retainerInvoice1 : RetainerInvoice
 
-SET retainerInvoice1 = NEW RetainerInvoice("INV003","03-07-2026","Client Company",terms1,3000,20,30,100)
+
+SET retainerInvoice1 = NEW RetainerInvoice(
+"INV003",
+"03-07-2026",
+"Client Company",
+terms1,
+3000,
+20,
+30,
+100
+)
+
+
+
 
 
 DECLARE account1 : FreelancerAccount
 
+
 SET account1 = NEW FreelancerAccount()
+
 
 
 
@@ -968,7 +1040,11 @@ CALL account1.addInvoice(hourlyInvoice1)
 CALL account1.addInvoice(retainerInvoice1)
 
 
+
+
 CALL account1.displayInvoices()
+
+
 
 END PROGRAM
 
